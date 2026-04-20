@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prospección Cantabria — Laucirica Transmisiones</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0f1e3c;
+    --navy2: #1a3060;
+    --blue: #1e5fa8;
+    --blue-light: #d0e4f7;
+    --accent: #e07b2a;
+    --accent-light: #fdebd0;
+    --green: #1a7a4a;
+    --green-light: #d5f0e2;
+    --amber: #9c6400;
+    --amber-light: #fff3cd;
+    --red: #8b1a1a;
+    --red-light: #fdecea;
+    --purple: #4a1a8b;
+    --purple-light: #f0edfb;
+    --teal: #0f6e56;
+    --teal-light: #e1f5ee;
+    --gray-100: #f7f8fa;
+    --gray-200: #edf0f4;
+    --gray-300: #d4d9e2;
+    --gray-500: #8a95a3;
+    --gray-700: #4a5568;
+    --gray-900: #1a202c;
+    --white: #ffffff;
+    --shadow: 0 2px 12px rgba(15,30,60,0.08);
+    --shadow-lg: 0 8px 32px rgba(15,30,60,0.14);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--gray-100); color: var(--gray-900); min-height: 100vh; }
+
+  /* HEADER */
+  .header {
+    background: var(--navy);
+    padding: 0 2rem;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 60px; position: sticky; top: 0; z-index: 100;
+    border-bottom: 2px solid var(--accent);
+  }
+  .header-brand { display: flex; align-items: center; gap: 12px; }
+  .header-logo { width: 32px; height: 32px; background: var(--accent); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-weight: 600; color: white; font-size: 13px; letter-spacing: -0.5px; }
+  .header-title { color: white; font-size: 15px; font-weight: 600; letter-spacing: -0.3px; }
+  .header-sub { color: rgba(255,255,255,0.5); font-size: 11px; font-family: 'DM Mono', monospace; }
+  .header-stats { display: flex; gap: 20px; }
+  .hstat { text-align: right; }
+  .hstat-val { color: var(--accent); font-size: 18px; font-weight: 600; font-family: 'DM Mono', monospace; line-height: 1; }
+  .hstat-lbl { color: rgba(255,255,255,0.45); font-size: 10px; margin-top: 2px; }
+
+  /* LAYOUT */
+  .layout { display: flex; height: calc(100vh - 60px); }
+
+  /* SIDEBAR */
+  .sidebar {
+    width: 220px; min-width: 220px; background: var(--white);
+    border-right: 1px solid var(--gray-200);
+    display: flex; flex-direction: column;
+    overflow-y: auto;
+  }
+  .sidebar-section { padding: 1rem 1rem 0.5rem; }
+  .sidebar-label { font-size: 10px; font-weight: 600; color: var(--gray-500); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
+  .sector-btn {
+    display: flex; align-items: center; justify-content: space-between;
+    width: 100%; padding: 9px 10px; border-radius: 8px; border: none;
+    background: none; cursor: pointer; text-align: left;
+    font-family: 'DM Sans', sans-serif; font-size: 13px; color: var(--gray-700);
+    margin-bottom: 3px; transition: all 0.15s;
+  }
+  .sector-btn:hover { background: var(--gray-100); }
+  .sector-btn.active { background: var(--navy); color: white; font-weight: 500; }
+  .sector-btn .s-icon { width: 20px; height: 20px; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 11px; margin-right: 8px; flex-shrink: 0; }
+  .sector-btn .s-count { font-family: 'DM Mono', monospace; font-size: 11px; background: rgba(0,0,0,0.07); padding: 1px 6px; border-radius: 10px; }
+  .sector-btn.active .s-count { background: rgba(255,255,255,0.2); color: white; }
+  .sector-btn-inner { display: flex; align-items: center; }
+  .sidebar-divider { height: 1px; background: var(--gray-200); margin: 8px 1rem; }
+
+  /* PRIORITY FILTER */
+  .filter-btn {
+    display: flex; align-items: center; gap: 6px;
+    width: 100%; padding: 7px 10px; border-radius: 8px; border: none;
+    background: none; cursor: pointer; text-align: left;
+    font-family: 'DM Sans', sans-serif; font-size: 12px; color: var(--gray-700);
+    margin-bottom: 3px; transition: all 0.15s;
+  }
+  .filter-btn:hover { background: var(--gray-100); }
+  .filter-btn.active { font-weight: 500; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+  /* STATUS filter */
+  .status-btn {
+    display: flex; align-items: center; gap: 6px;
+    width: 100%; padding: 7px 10px; border-radius: 8px; border: none;
+    background: none; cursor: pointer; text-align: left;
+    font-family: 'DM Sans', sans-serif; font-size: 12px; color: var(--gray-700);
+    margin-bottom: 3px; transition: all 0.15s;
+  }
+  .status-btn:hover { background: var(--gray-100); }
+  .status-btn.active { background: var(--navy); color: white; font-weight: 500; }
+
+  /* MAIN */
+  .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+
+  /* TOOLBAR */
+  .toolbar {
+    background: var(--white); border-bottom: 1px solid var(--gray-200);
+    padding: 12px 1.5rem; display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+  }
+  .search-wrap { flex: 1; min-width: 200px; position: relative; }
+  .search-wrap svg { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--gray-500); }
+  .search-input {
+    width: 100%; padding: 8px 12px 8px 34px; border: 1px solid var(--gray-300);
+    border-radius: 8px; font-family: 'DM Sans', sans-serif; font-size: 13px;
+    outline: none; color: var(--gray-900); background: var(--gray-100);
+    transition: border-color 0.15s;
+  }
+  .search-input:focus { border-color: var(--blue); background: white; }
+  .result-count { font-size: 12px; color: var(--gray-500); white-space: nowrap; font-family: 'DM Mono', monospace; }
+  .export-btn {
+    padding: 8px 14px; background: var(--accent); color: white; border: none;
+    border-radius: 8px; font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 500;
+    cursor: pointer; white-space: nowrap; transition: background 0.15s;
+  }
+  .export-btn:hover { background: #c96b1a; }
+
+  /* TABLE AREA */
+  .table-area { flex: 1; overflow-y: auto; padding: 1rem 1.5rem; }
+  .table-wrap { background: white; border-radius: 12px; border: 1px solid var(--gray-200); overflow: hidden; box-shadow: var(--shadow); }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  thead { position: sticky; top: 0; z-index: 10; }
+  th {
+    background: var(--navy); color: rgba(255,255,255,0.85); font-weight: 500;
+    padding: 11px 14px; text-align: left; font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em;
+    border-bottom: 2px solid var(--accent); white-space: nowrap;
+  }
+  th.sortable { cursor: pointer; }
+  th.sortable:hover { color: white; }
+  td { padding: 12px 14px; border-bottom: 1px solid var(--gray-200); vertical-align: middle; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: var(--gray-100); }
+  tr.selected td { background: #edf4ff !important; }
+
+  .co-name { font-weight: 600; color: var(--navy2); font-size: 13px; }
+  .co-contact { font-size: 11px; color: var(--gray-500); margin-top: 2px; font-family: 'DM Mono', monospace; }
+  .co-location { font-size: 12px; color: var(--gray-700); }
+  .co-poly { font-size: 11px; color: var(--gray-500); }
+  .co-activity { font-size: 12px; color: var(--gray-700); max-width: 240px; }
+  .co-potential { font-size: 11px; color: var(--gray-700); max-width: 200px; }
+
+  /* BADGES */
+  .badge { display: inline-flex; align-items: center; padding: 3px 9px; border-radius: 20px; font-size: 11px; font-weight: 600; white-space: nowrap; }
+  .badge-alta { background: var(--green-light); color: var(--green); }
+  .badge-media { background: var(--amber-light); color: var(--amber); }
+  .badge-baja { background: var(--gray-200); color: var(--gray-500); }
+
+  /* SECTOR PILL */
+  .sector-pill { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; border-radius: 12px; font-size: 10px; font-weight: 500; }
+  .pill-auto { background: var(--blue-light); color: var(--blue); }
+  .pill-quim { background: var(--teal-light); color: var(--teal); }
+  .pill-alim { background: var(--accent-light); color: var(--accent); }
+  .pill-meta { background: var(--red-light); color: var(--red); }
+  .pill-dist { background: var(--purple-light); color: var(--purple); }
+
+  /* STATUS SELECT */
+  .status-select {
+    padding: 4px 8px; border: 1px solid var(--gray-300); border-radius: 6px;
+    font-family: 'DM Sans', sans-serif; font-size: 11px; background: white;
+    cursor: pointer; color: var(--gray-700); outline: none; min-width: 120px;
+  }
+  .status-select:focus { border-color: var(--blue); }
+  .status-select.s0 { color: var(--gray-500); }
+  .status-select.s1 { color: #1a5fa8; font-weight: 500; }
+  .status-select.s2 { color: #9c6400; font-weight: 500; }
+  .status-select.s3 { color: #1a7a4a; font-weight: 500; }
+  .status-select.s4 { color: #8b1a1a; font-weight: 500; }
+
+  /* NOTES */
+  .note-input {
+    width: 100%; padding: 4px 8px; border: 1px solid transparent; border-radius: 6px;
+    font-family: 'DM Sans', sans-serif; font-size: 11px; background: transparent; color: var(--gray-700);
+    outline: none; transition: all 0.15s; resize: none; min-width: 120px;
+  }
+  .note-input:hover { border-color: var(--gray-300); background: white; }
+  .note-input:focus { border-color: var(--blue); background: white; }
+
+  /* EMPTY */
+  .empty { padding: 4rem; text-align: center; color: var(--gray-500); }
+  .empty-icon { font-size: 40px; margin-bottom: 1rem; }
+  .empty-txt { font-size: 15px; }
+
+  /* DETAIL DRAWER */
+  .drawer-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.3); z-index: 200; display: none; }
+  .drawer-overlay.open { display: block; }
+  .drawer {
+    position: fixed; right: 0; top: 0; bottom: 0; width: 420px;
+    background: white; box-shadow: var(--shadow-lg); z-index: 201;
+    transform: translateX(100%); transition: transform 0.25s ease;
+    display: flex; flex-direction: column;
+  }
+  .drawer.open { transform: translateX(0); }
+  .drawer-header { background: var(--navy); padding: 1.5rem; }
+  .drawer-close { float: right; background: none; border: none; color: rgba(255,255,255,0.6); cursor: pointer; font-size: 20px; }
+  .drawer-sector { font-size: 11px; color: rgba(255,255,255,0.5); margin-bottom: 6px; }
+  .drawer-name { font-size: 18px; font-weight: 600; color: white; line-height: 1.3; }
+  .drawer-location { font-size: 12px; color: rgba(255,255,255,0.6); margin-top: 4px; font-family: 'DM Mono', monospace; }
+  .drawer-body { flex: 1; overflow-y: auto; padding: 1.5rem; }
+  .drawer-section { margin-bottom: 1.5rem; }
+  .drawer-section-title { font-size: 10px; font-weight: 600; color: var(--gray-500); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
+  .drawer-field { background: var(--gray-100); border-radius: 8px; padding: 10px 14px; margin-bottom: 8px; font-size: 13px; color: var(--gray-700); line-height: 1.6; }
+  .drawer-field strong { color: var(--navy2); font-weight: 500; display: block; font-size: 11px; margin-bottom: 2px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--gray-500); }
+  .drawer-footer { padding: 1rem 1.5rem; border-top: 1px solid var(--gray-200); display: flex; gap: 10px; }
+  .btn-primary { flex: 1; padding: 10px; background: var(--navy); color: white; border: none; border-radius: 8px; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; cursor: pointer; }
+  .btn-primary:hover { background: var(--navy2); }
+  .btn-accent { padding: 10px 16px; background: var(--accent); color: white; border: none; border-radius: 8px; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; cursor: pointer; }
+  .btn-accent:hover { background: #c96b1a; }
+
+  /* PROGRESS BAR */
+  .progress-bar-wrap { height: 4px; background: var(--gray-200); border-radius: 2px; overflow: hidden; margin-top: 8px; }
+  .progress-bar { height: 100%; background: var(--accent); border-radius: 2px; transition: width 0.4s ease; }
+
+  /* TOAST */
+  .toast { position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%); background: var(--navy); color: white; padding: 10px 20px; border-radius: 8px; font-size: 13px; opacity: 0; transition: opacity 0.3s; z-index: 999; pointer-events: none; }
+  .toast.show { opacity: 1; }
+
+  /* Responsive col hide */
+  @media (max-width: 1100px) { .col-potential { display: none; } }
+  @media (max-width: 900px) { .col-activity { display: none; } }
+  @media (max-width: 750px) { .sidebar { display: none; } }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-brand">
+    <div class="header-logo">LT</div>
+    <div>
+      <div class="header-title">Laucirica Transmisiones</div>
+      <div class="header-sub">BEST Gold Bonfiglioli · Prospección Cantabria 2026 · <span id="save-indicator" style="color:rgba(255,255,255,0.4)">💾 guardado auto</span></div>
+    </div>
+  </div>
+  <div class="header-stats">
+    <div class="hstat">
+      <div class="hstat-val" id="hstat-total">156</div>
+      <div class="hstat-lbl">empresas</div>
+    </div>
+    <div class="hstat">
+      <div class="hstat-val" id="hstat-alta">—</div>
+      <div class="hstat-lbl">alta prioridad</div>
+    </div>
+    <div class="hstat">
+      <div class="hstat-val" id="hstat-contactadas">0</div>
+      <div class="hstat-lbl">contactadas</div>
+    </div>
+    <div class="hstat">
+      <div class="hstat-val" id="hstat-pct">0%</div>
+      <div class="hstat-lbl">avance</div>
+    </div>
+  </div>
+</div>
+
+<div class="layout">
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-label">Sectores</div>
+      <button class="sector-btn active" onclick="setSector('all')" id="btn-all">
+        <span class="sector-btn-inner"><span class="s-icon" style="background:#e8edf7;color:#1e5fa8">📋</span>Todos</span>
+        <span class="s-count" id="cnt-all">156</span>
+      </button>
+      <button class="sector-btn" onclick="setSector('auto')" id="btn-auto">
+        <span class="sector-btn-inner"><span class="s-icon" style="background:#d0e4f7;color:#1e5fa8">🔩</span>Automoción</span>
+        <span class="s-count" id="cnt-auto">32</span>
+      </button>
+      <button class="sector-btn" onclick="setSector('quim')" id="btn-quim">
+        <span class="sector-btn-inner"><span class="s-icon" style="background:#d5f0e2;color:#1a7a4a">⚗️</span>Química</span>
+        <span class="s-count" id="cnt-quim">32</span>
+      </button>
+      <button class="sector-btn" onclick="setSector('alim')" id="btn-alim">
+        <span class="sector-btn-inner"><span class="s-icon" style="background:#fdebd0;color:#e07b2a">🥫</span>Alimentación</span>
+        <span class="s-count" id="cnt-alim">31</span>
+      </button>
+      <button class="sector-btn" onclick="setSector('meta')" id="btn-meta">
+        <span class="sector-btn-inner"><span class="s-icon" style="background:#fdecea;color:#8b1a1a">⚙️</span>Metalurgia</span>
+        <span class="s-count" id="cnt-meta">31</span>
+      </button>
+      <button class="sector-btn" onclick="setSector('dist')" id="btn-dist">
+        <span class="sector-btn-inner"><span class="s-icon" style="background:#f0edfb;color:#4a1a8b">🤝</span>Distribuidores</span>
+        <span class="s-count" id="cnt-dist">30</span>
+      </button>
+    </div>
+
+    <div class="sidebar-divider"></div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">Prioridad</div>
+      <button class="filter-btn active" onclick="setPriority('all')" id="prio-all">
+        <span class="dot" style="background:#aaa"></span> Todas
+      </button>
+      <button class="filter-btn" onclick="setPriority('ALTA')" id="prio-alta">
+        <span class="dot" style="background:#1a7a4a"></span> Alta
+      </button>
+      <button class="filter-btn" onclick="setPriority('MEDIA')" id="prio-media">
+        <span class="dot" style="background:#9c6400"></span> Media
+      </button>
+      <button class="filter-btn" onclick="setPriority('BAJA')" id="prio-baja">
+        <span class="dot" style="background:#bbb"></span> Baja
+      </button>
+    </div>
+
+    <div class="sidebar-divider"></div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">Estado</div>
+      <button class="status-btn active" onclick="setStatusFilter('all')" id="sf-all">Todos</button>
+      <button class="status-btn" onclick="setStatusFilter('0')" id="sf-0">Sin contacto</button>
+      <button class="status-btn" onclick="setStatusFilter('1')" id="sf-1">Contactado</button>
+      <button class="status-btn" onclick="setStatusFilter('2')" id="sf-2">En seguimiento</button>
+      <button class="status-btn" onclick="setStatusFilter('3')" id="sf-3">Cliente</button>
+      <button class="status-btn" onclick="setStatusFilter('4')" id="sf-4">Descartado</button>
+    </div>
+
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-section" style="padding-bottom:1rem;">
+      <div class="sidebar-label">Progreso</div>
+      <div style="font-size:12px;color:var(--gray-700);margin-bottom:4px;" id="progress-txt">0 de 156 contactadas</div>
+      <div class="progress-bar-wrap"><div class="progress-bar" id="progress-bar" style="width:0%"></div></div>
+    </div>
+  </aside>
+
+  <div class="main">
+    <div class="toolbar">
+      <div class="search-wrap">
+        <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input class="search-input" id="search" placeholder="Buscar empresa, localidad, actividad..." oninput="render()">
+      </div>
+      <span class="result-count" id="result-count">156 resultados</span>
+      <button class="export-btn" onclick="exportCSV()">⬇ Exportar CSV</button>
+      <button class="export-btn" style="background:var(--gray-500)" onclick="resetData()" title="Borrar todos los estados y notas">🗑 Reset</button>
+    </div>
+
+    <div class="table-area">
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th style="width:36px">#</th>
+              <th class="sortable" onclick="sortBy('name')">Empresa ↕</th>
+              <th>Localidad</th>
+              <th class="col-activity">Actividad</th>
+              <th class="col-potential">Potencial Bonfiglioli</th>
+              <th>Prioridad</th>
+              <th>Estado</th>
+              <th>Notas</th>
+              <th style="width:36px"></th>
+            </tr>
+          </thead>
+          <tbody id="tbody"></tbody>
+        </table>
+        <div class="empty" id="empty" style="display:none">
+          <div class="empty-icon">🔍</div>
+          <div class="empty-txt">No hay empresas que coincidan con los filtros</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DETAIL DRAWER -->
+<div class="drawer-overlay" id="overlay" onclick="closeDrawer()"></div>
+<div class="drawer" id="drawer">
+  <div class="drawer-header">
+    <button class="drawer-close" onclick="closeDrawer()">✕</button>
+    <div class="drawer-sector" id="d-sector"></div>
+    <div class="drawer-name" id="d-name"></div>
+    <div class="drawer-location" id="d-location"></div>
+  </div>
+  <div class="drawer-body">
+    <div class="drawer-section">
+      <div class="drawer-section-title">Información</div>
+      <div class="drawer-field"><strong>Actividad principal</strong><span id="d-activity"></span></div>
+      <div class="drawer-field"><strong>Potencial Bonfiglioli</strong><span id="d-potential"></span></div>
+      <div class="drawer-field"><strong>Contacto sugerido</strong><span id="d-contact"></span></div>
+    </div>
+    <div class="drawer-section">
+      <div class="drawer-section-title">Estado comercial</div>
+      <select class="status-select" id="d-status" onchange="updateStatusFromDrawer()">
+        <option value="0">⬜ Sin contacto</option>
+        <option value="1">📞 Contactado</option>
+        <option value="2">🔄 En seguimiento</option>
+        <option value="3">✅ Cliente</option>
+        <option value="4">❌ Descartado</option>
+      </select>
+    </div>
+    <div class="drawer-section">
+      <div class="drawer-section-title">Notas</div>
+      <textarea class="note-input" id="d-notes" rows="4" placeholder="Escribe tus notas aquí..." oninput="updateNotesFromDrawer()" style="border:1px solid var(--gray-300);background:var(--gray-100);padding:10px;border-radius:8px;width:100%;font-size:13px;"></textarea>
+    </div>
+    <div class="drawer-section">
+      <div class="drawer-section-title">Argumento de venta rápido</div>
+      <div class="drawer-field" id="d-pitch" style="font-size:12px;line-height:1.7;"></div>
+    </div>
+  </div>
+  <div class="drawer-footer">
+    <button class="btn-primary" onclick="closeDrawer()">Cerrar</button>
+    <button class="btn-accent" onclick="copyEmail()">📧 Copiar email</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ============================================================
+// DATA
+// ============================================================
+const SECTORS = {
+  auto: { label: 'Automoción y Metal', pill: 'pill-auto', icon: '🔩', color: '#1e5fa8' },
+  quim: { label: 'Química / Farmacéutica', pill: 'pill-quim', icon: '⚗️', color: '#0f6e56' },
+  alim: { label: 'Alimentación', pill: 'pill-alim', icon: '🥫', color: '#e07b2a' },
+  meta: { label: 'Metalurgia / Ind. Pesada', pill: 'pill-meta', icon: '⚙️', color: '#8b1a1a' },
+  dist: { label: 'Distribuidores / Partners', pill: 'pill-dist', icon: '🤝', color: '#4a1a8b' },
+};
+
+const PITCHES = {
+  auto: 'Bonfiglioli es referencia mundial en transmisiones para automoción. Servicio express 2-3h minimiza paros de línea. Únicos BEST Gold en España = máximo nivel de soporte técnico y stock disponible.',
+  quim: 'Plantas químicas exigen continuidad 24/7. Nuestro servicio 24h y técnicos en planta garantizan respuesta inmediata ante cualquier fallo de reductor o motor. Bombas, reductores y variadores del catálogo completo.',
+  alim: 'La industria alimentaria necesita componentes certificados y respuesta rápida. Bonfiglioli cubre mototambores, bandas, variadores y motores higiénicos. Servicio en planta para auditorías preventivas.',
+  meta: 'Metalurgia pesada requiere reductores de alta potencia y alta disponibilidad. Somos el único BEST Gold en España: stock de piezas, reparación, cálculo a medida y sustitución express.',
+  dist: 'Asociarse con Laucirica significa acceso al catálogo Bonfiglioli completo con los mejores márgenes del mercado, formación técnica gratuita y soporte de primer nivel para cerrar ventas.',
+};
+
+const RAW = [
+  // AUTOMOCIÓN (32)
+  ['auto','Daimler Buses España','Santander','Fabricación de autobuses. OEM directo.','Reductores de tracción, mototambores, servos para líneas de montaje','ALTA','Responsable Mantenimiento / Compras Indirectas'],
+  ['auto','Bridgestone Hispania','Puente San Miguel','Fabricación de neumáticos agrícolas y camioneta','Motores para líneas de vulcanización, bandas transportadoras, motovibradores','ALTA','Jefe Mantenimiento / Ingeniería'],
+  ['auto','Teknia Ampuero','Ampuero','Piezas torneadas de precisión, ejes para motor eléctrico (Tier 1)','Reductores y variadores para líneas de mecanizado CNC','ALTA','Responsable Mantenimiento Planta'],
+  ['auto','Maflow Spain Automotive (Boryszew)','Guarnizo / Astillero','Mangueras y sistemas de conducción (Tier 2)','Motores y electrónica de control para líneas de extrusión','ALTA','Jefe Mantenimiento / Compras'],
+  ['auto','Ecrimesa','Santander','Microfusión de piezas de acero (57% automoción)','Reductores para hornos y líneas de colada, mototambores','ALTA','Director Técnico / Mantenimiento'],
+  ['auto','Mecansa','Cantabria','Mecanizado de piezas de automoción (80% facturación)','Variadores y motores para centros de mecanizado','ALTA','Responsable Producción'],
+  ['auto','Mimecrisa (grupo Ecrimesa)','Santander','MIM - Metal Injection Moulding. 30% automoción','Reductores compactos, electrónica para automatización de hornos','MEDIA','Director Técnico'],
+  ['auto','Edscha Santander','Santander / Camargo','Sistemas de bisagras y mecanismos de puertas (Tier 1)','Motores y reductores para prensas y líneas de embutición','ALTA','Jefe Mantenimiento'],
+  ['auto','Casuso Propellers','Cantabria','Fabricación de hélices navales y componentes aeroespaciales','Reductores especiales, motores de alta precisión','MEDIA','Director Técnico / Producción'],
+  ['auto','Industrias Montañesas Eléctricas Mecánicas (IMEM)','Santander - Barrio Adarzo','Fabricación de maquinaria eléctrica y mecánica para industria','Reductores, variadores, motores Bonfiglioli para equipos propios','ALTA','Dpto. Compras / Ingeniería'],
+  ['auto','Leading Metal Mechanic Solutions','San Felices de Buelna','Construcción mecánica especial, trabajos de calderería industrial','Reductores a medida, cálculo transmisiones, servicio en planta','ALTA','Director / Responsable Técnico'],
+  ['auto','Industrias Cantabras de Torneado','Camargo (Pol. Trascueto)','Torneado y mecanizado de piezas industriales','Motores y variadores para tornos CNC, reductores','MEDIA','Jefe Producción / Mantenimiento'],
+  ['auto','Industrias Jacinto Herrero','Astillero (Pol. Guarnizo)','Fabricación de componentes metálicos, calderería','Reductores, bandas transportadoras, mototambores','MEDIA','Responsable Compras'],
+  ['auto','Industrias Hergom','Santa Cruz de Bezana','Fabricación de radiadores y aparatos de calefacción','Motores para líneas de pintura y ensamblaje, variadores','MEDIA','Jefe Mantenimiento'],
+  ['auto','Estampaciones Metálicas del Cantábrico','Santoña','Estampación y embutición de piezas metálicas','Reductores para prensas, variadores mecánicos','MEDIA','Responsable Mantenimiento'],
+  ['auto','Metaltres Peferlui','Torrelavega (Pol. Tanos-Viernoles)','Fabricación piezas metálicas de precisión','Variadores y motores para líneas de producción','MEDIA','Responsable Técnico'],
+  ['auto','Forja, Estampación y Embutición Norte','Torrelavega (Pol. Tanos)','Forja y estampación de piezas de automoción','Reductores para prensas de forja, motores eléctricos','ALTA','Jefe Mantenimiento Planta'],
+  ['auto','SOME (San Felices Buelna)','San Felices de Buelna','Piezas metálicas de precisión Tier 2 para multinacionales auto','Reductores, motores y variadores para líneas de mecanizado','ALTA','Responsable Mantenimiento'],
+  ['auto','Metalúrgica Hakensa Cantabria','Torrelavega','Fundición y mecanizado de piezas metálicas','Motores para hornos, reductores de manipulación','MEDIA','Director Técnico'],
+  ['auto','Componentes Hergulan','Campoo de Suso / Reinosa','Fabricación de componentes metálicos industriales','Reductores y variadores para instalaciones propias','MEDIA','Responsable Compras / Producción'],
+  ['auto','Metalúrgicas Obregón','Villaescusa','Estructuras metálicas y fabricación de componentes','Motores, reductores para líneas de producción y almacén','BAJA','Jefe Taller'],
+  ['auto','Nomocan Montajes','Villaescusa','Montajes industriales y estructuras metálicas','Reductores para instalaciones de clientes industriales','BAJA','Director / Técnico'],
+  ['auto','MPL Cantabria 2000','Marina de Cudeyo','Fabricación de perfiles y estructuras metálicas','Variadores mecánicos, reductores para líneas de laminación','MEDIA','Responsable Técnico'],
+  ['auto','Cortes Metálicos del Norte','Camargo','Corte y procesado de materiales metálicos','Motores y variadores para centros de corte CNC','MEDIA','Responsable Mantenimiento'],
+  ['auto','Metanor Metálicos','Cabezón de la Sal','Fabricación y comercialización de productos metálicos','Reductores, elementos de transmisión para clientes industriales','BAJA','Responsable Compras'],
+  ['auto','Ciser Montajes Metálicos','Astillero','Montajes metálicos e industriales','Reductores y motores para instalaciones de clientes','BAJA','Director Técnico'],
+  ['auto','Construcciones Metálicas Tadefor','Medio Cudeyo','Fabricación de estructuras metálicas pesadas','Motores y reductores para líneas de producción','BAJA','Jefe Taller / Mantenimiento'],
+  ['auto','CMT Cantabria Calderería','Medio Cudeyo','Calderería industrial y construcciones metálicas','Reductores para instalaciones industriales, motovibradores','BAJA','Director Técnico'],
+  ['auto','Metalicas Mergo','Camargo (Pol. Raos)','Calderería y montajes industriales','Motores, variadores para talleres de clientes','BAJA','Responsable Técnico'],
+  ['auto','Mecanica Braosera','Santander','Mecanizado de piezas para sectores industriales','Variadores mecánicos, motores para centros mecanizado','MEDIA','Responsable Producción'],
+  ['auto','Estructuras Metálicas Torrelavega','Torrelavega','Fabricación de estructuras metálicas','Motores y reductores para equipos de manutención','BAJA','Jefe de Obra / Técnico'],
+  ['auto','Metalicas Santander','Santander','Fabricación y comercialización de materiales metálicos','Motores pequeños y reductores para equipos propios','BAJA','Responsable Compras'],
+  // QUÍMICA (32)
+  ['quim','Solvay Torrelavega','Torrelavega (planta industrial)','Química básica: carbonato sódico, bicarbonato, derivados cloro. +600.000 t/año','Reductores pesados, bombas, motovibradores, variadores; consumo muy alto','ALTA','Responsable Mantenimiento / Ingeniería de Planta'],
+  ['quim','Bondalti (complejo Solvay)','Torrelavega','Química del cloro. Opera en el complejo de Solvay','Bombas industriales, reductores, electrónica de proceso','ALTA','Responsable Técnico / Compras'],
+  ['quim','Air Liquide Cantabria','Torrelavega (complejo Solvay)','Gases industriales. Presencia en complejo Solvay','Compresores, motores especiales, variadores de frecuencia','ALTA','Responsable Mantenimiento'],
+  ['quim','Kemira Cantabria','Torrelavega','Química para tratamiento de aguas y procesos industriales','Bombas, reductores para líneas de dosificación','ALTA','Ingeniero de Proceso / Mantenimiento'],
+  ['quim','K&S (Esco) Cantabria','Torrelavega / Polanco (sal)','Extracción y procesado de sal. Socio en complejo Solvay','Mototambores para cintas, reductores, variadores','ALTA','Responsable Mantenimiento Planta'],
+  ['quim','Cantabria Labs (Ind. Farmacéutica Cantabria)','Santander','Laboratorio farmacéutico. I+D+i activo','Motores y variadores para líneas de llenado y envasado','ALTA','Responsable Técnico / Mantenimiento'],
+  ['quim','Moehs Cántabra','Cantabria','Fabricación de principios activos farmacéuticos (API)','Reductores y motores para reactores y mezcladores','ALTA','Jefe Mantenimiento / Compras'],
+  ['quim','ASPLA (Grupo Armando Álvarez)','Torrelavega','Films de polietileno para industria y agricultura','Motores para extrusoras, variadores, reductores de laminación','ALTA','Jefe Mantenimiento Planta'],
+  ['quim','Sniace (o sucesoras)','Torrelavega','Fibras artificiales y derivados celulósicos (histórica)','Reductores grandes, mototambores, motores industriales','MEDIA','Responsable Compras / Mantenimiento'],
+  ['quim','Sydney Chemical Solutions','Cantabria','Fabricación de productos químicos para ganadería e industria','Bombas dosificadoras, motores para mezcladoras','MEDIA','Director Técnico'],
+  ['quim','Plastibher','Torrelavega','Transformación de plásticos, inyección y soplado','Motores para extrusoras e inyectoras, variadores eléctricos','MEDIA','Jefe Mantenimiento'],
+  ['quim','Plasnor','Bárcena de Cicero (Pol. Ambrosero)','Fabricación de tuberías plásticas para saneamiento','Motores para extrusoras, variadores, reductores','MEDIA','Responsable Técnico'],
+  ['quim','Vitrificados del Norte (Vitrinor)','Cantabria','Fabricación de productos vitrificados y contenedores industriales','Motores para hornos y cintas, variadores mecánicos','MEDIA','Jefe de Planta'],
+  ['quim','Industrias Químicas de Reinosa','Reinosa','Productos químicos industriales para el sector energético','Bombas, reductores, motores para procesos químicos','MEDIA','Director Técnico'],
+  ['quim','Grupo Rubiera (derivados del caucho)','Camargo / Torrelavega','Fabricación de piezas de caucho para industria y auto','Variadores y motores para prensas de caucho','MEDIA','Responsable Mantenimiento'],
+  ['quim','Pinturas Cantabria zona TL','Torrelavega','Fabricación de pinturas industriales y decorativas','Motores para mezcladores y líneas de envasado','BAJA','Responsable Compras'],
+  ['quim','Poliplastic Norte','Cantabria','Transformación de plásticos técnicos','Motores para inyectoras, variadores, reductores','MEDIA','Jefe Mantenimiento'],
+  ['quim','Quimicamp','Camargo','Productos químicos para tratamiento de superficies metálicas','Bombas dosificadoras, motores para túneles de lavado','MEDIA','Director Técnico / Ventas'],
+  ['quim','Ercros (delegación norte)','Santander','Química industrial y producción de derivados cloro','Reductores, bombas, motores para plantas propias','MEDIA','Responsable Mantenimiento Regional'],
+  ['quim','Resinas del Norte','Cantabria','Producción de resinas y aglutinantes industriales','Mezcladores con motores Bonfiglioli, reductores para agitadores','MEDIA','Jefe Planta'],
+  ['quim','Industrias Químicas del Besaya','Valle del Besaya / Torrelavega','Productos químicos derivados de procesos industriales','Motores y bombas para procesos de tratamiento','MEDIA','Responsable Técnico'],
+  ['quim','Teka Industrial (Cantabria)','Cantabria','Fabricación de aparatos de cocina e industriales','Motores, variadores para líneas de producción doméstica','MEDIA','Jefe Mantenimiento'],
+  ['quim','Air Products (delegación)','Santander / Torrelavega','Gases industriales y especiales para la industria química','Compresores, motores especiales; interlocutor para clientes','MEDIA','Responsable Regional'],
+  ['quim','Aspasur (filial norte)','Torrelavega zona','Tratamiento y reciclaje de subproductos industriales','Motovibradores para cribas, cintas, mototambores','MEDIA','Director Técnico'],
+  ['quim','Química Ibérica Norte','Cantabria','Distribución y fabricación de especialidades químicas industriales','Bombas, reductores, motores para procesos propios','BAJA','Responsable Compras'],
+  ['quim','Dow Chemical (delegación regional)','Santander (oficina)','Distribución de especialidades químicas','Referir a planta principal; contacto para especificaciones','BAJA','Responsable Técnico'],
+  ['quim','Laboratorios Diafarm (norte)','Santander','Distribución y producción de especialidades farmacéuticas','Motores para líneas de producción small-batch','BAJA','Responsable Técnico'],
+  ['quim','Laboratorio Hipra (delegación)','Cantabria','Productos veterinarios y farmacéuticos','Motores y variadores para líneas de envasado','MEDIA','Responsable Técnico'],
+  ['quim','Farmacológica Cantabria','Santander (área)','Especialidades farmacéuticas veterinarias','Reductores para mezcladores, motores de proceso','MEDIA','Responsable Mantenimiento'],
+  ['quim','Euroespes Cantabria','Santander','Industria farmacéutica y biotecnología','Motores para biorreactores, variadores de alta precisión','BAJA','Responsable Técnico'],
+  ['quim','Nanotec / laboratorios PCTCAN','PCTCAN Santander','I+D farmacéutico en Parque Científico y Tecnológico de Cantabria','Motores de precisión, servos para equipos de laboratorio','BAJA','Director Técnico'],
+  // ALIMENTACIÓN (31)
+  ['alim','Nestlé España (planta La Penilla)','La Penilla (Cayón)','Fabricación de leche condensada, productos lácteos. Una de las plantas Nestlé más grandes de España','Cintas transportadoras (mototambores), motores para envasado, reductores','ALTA','Jefe Mantenimiento Planta / Compras Indirectas'],
+  ['alim','Central Lechera Asturiana (CAPSA) Cantabria','Cantabria','Leche UHT, batidos, nata. Gran planta de envasado','Mototambores, variadores para líneas de llenado, motores','ALTA','Responsable Mantenimiento / Compras'],
+  ['alim','Conservas Calvo (delegación)','Laredo / Santoña','Conservas de pescado (bonito del norte, atún)','Motovibradores para vibradores de línea, bandas y rodillos, motores','ALTA','Jefe Mantenimiento'],
+  ['alim','Conservas Ortiz','Ondarroa / delegación norte','Conservas premium de pescado. Presencia en costa cántabra','Bandas transportadoras, motovibradores para escurrido','ALTA','Responsable Compras / Mantenimiento'],
+  ['alim','Grupo Alianza (lácteos)','Cantabria','Fabricación de quesos y productos lácteos de la región','Reductores para queseras, motores para pasteurizadores','ALTA','Jefe de Producción / Mantenimiento'],
+  ['alim','Aguas de Solares (Nestlé Waters)','Solares (Medio Cudeyo)','Embotellado de agua mineral natural','Motores y variadores para líneas de embotellado, mototambores','ALTA','Responsable Mantenimiento'],
+  ['alim','Lactalis (planta Cantabria)','Cantabria','Grupo Lactalis: quesos, nata, mantequilla. Con planta en región','Motores para queseras y pasteurizadores, variadores','ALTA','Jefe Mantenimiento Planta'],
+  ['alim','Conservas Solano Arriola','Santoña','Conservas de anchoa y pescado azul. Artesanal/industrial','Bandas y rodillos, motovibradores para líneas de procesado','MEDIA','Responsable Técnico / Producción'],
+  ['alim','Consorcio Aralar (embutidos)','Cantabria interior','Fabricación de embutidos y productos cárnicos','Motores para picadoras y llenadoras, variadores','MEDIA','Jefe Mantenimiento'],
+  ['alim','Industrias Cárnicas Jocar','Torrelavega zona','Procesado y conservación de productos cárnicos','Motores para cámaras frigoríficas, cintas, reductores','MEDIA','Responsable Técnico'],
+  ['alim','Río Frío (ahumados y marinados)','Costa cantábrica','Procesado y marinado de productos del mar','Motovibradores, motores para túneles de ahumado','MEDIA','Jefe Producción'],
+  ['alim','Bebidas Refrescantes del Norte','Torrelavega (Pol. Industrial)','Fabricación de bebidas gaseosas y refrescantes','Motores para líneas de carbonatación, variadores','MEDIA','Jefe Producción / Mantenimiento'],
+  ['alim','Conservas La Cucharita','Santoña / costa','Conservas de anchoa artesanal-industrial','Bandas, motovibradores, motores pequeños para procesado','MEDIA','Propietario / Responsable Técnico'],
+  ['alim','Conservas Yurrita','Santoña','Anchoas y conservas de alta gama','Motovibradores, bandas y rodillos para procesado de pescado','MEDIA','Responsable Producción'],
+  ['alim','Cárnicas Cantábricas (agrupación)','Torrelavega zona','Procesado cárnico industrial','Reductores para picadoras industriales, motores','MEDIA','Jefe Mantenimiento'],
+  ['alim','Lácteos Cantabria (cooperativa)','Interior de Cantabria','Fabricación de leche y productos lácteos locales','Motores para líneas de pasteurización y envasado','MEDIA','Responsable Técnico'],
+  ['alim','Frigoríficos del Norte','Santander / Torrelavega','Almacenamiento y distribución frigorífica industrial','Motores para cámaras, cintas de distribución, variadores','MEDIA','Jefe Mantenimiento'],
+  ['alim','Panadería y Bollería Industrial Norte','Torrelavega / Santander','Fabricación industrial de pan, bollería y pastelería','Motores para amasadoras, hornos rotativos, cintas, variadores','MEDIA','Responsable Técnico / Compras'],
+  ['alim','Grupo Siro (planta norte)','Delegación Cantabria','Galletas, bollería industrial. Grupo nacional','Motores para amasadoras, cintas, reductores de producción','MEDIA','Jefe Mantenimiento'],
+  ['alim','Industrias Lácteas Lacesa','Cantabria','Derivados lácteos, quesos frescos','Reductores para queseras, motores de agitación','MEDIA','Responsable Producción'],
+  ['alim','Conservas Serrats','Santoña','Conservas de bonito y sardina. Empresa familiar consolidada','Bandas de procesado, motovibradores, motores','MEDIA','Propietario / Técnico'],
+  ['alim','Agropal (alimentos para animales)','Cantabria','Fabricación de piensos y alimentos compuestos para animales','Motovibradores para cribas, cintas de dosificación, reductores','MEDIA','Jefe Técnico'],
+  ['alim','Corlasa (carnes y embutidos)','Cantabria interior','Cárnicas y embutidos regionales','Motores para cámaras y líneas de procesado','BAJA','Responsable Técnico'],
+  ['alim','Anchoas del Cantábrico (varias)','Santoña / Laredo / Castro','Grupo de productores de anchoas (zona alta concentración)','Motovibradores, bandas y rodillos para procesado de pescado','MEDIA','Responsable Producción'],
+  ['alim','Galletas Lolín / Industrias Dulces Norte','Torrelavega','Fabricación de galletas y dulces industriales','Motores para hornos y cintas, variadores de velocidad','MEDIA','Jefe Mantenimiento'],
+  ['alim','Central de Quesos de Cantabria','Interior de Cantabria','Producción de queso de Cantabria DOP','Reductores para queseras, motores de agitación','MEDIA','Responsable Técnico'],
+  ['alim','Cofradías de Pescadores (plantas)','Santander, Santoña, Laredo, Colindres','Procesado primario de pescado fresco','Motovibradores para escurrido, cintas de transporte, motores','BAJA','Responsable Técnico de Planta'],
+  ['alim','Danone (planta asociada norte)','Asturias/Cantabria','Yogures y productos lácteos refrigerados','Mototambores, variadores para líneas de envasado','MEDIA','Responsable Mantenimiento Regional'],
+  ['alim','Leche Pascual (delegación norte)','Santander','Leche y derivados lácteos. Distribución y embotellado','Motores para líneas de embotellado, reductores compactos','MEDIA','Responsable Compras'],
+  ['alim','Tropicana / jugos (planta distribución)','Santander área','Embotellado y distribución de zumos y bebidas','Motores para líneas de llenado, variadores de velocidad','MEDIA','Responsable Técnico'],
+  ['alim','Grupo Hijos de Rivera (delegación)','Santander','Distribución de cervezas Estrella Galicia. Planta logística','Motores para cintas de distribución, variadores','BAJA','Responsable Logística / Mantenimiento'],
+  // METALURGIA (31)
+  ['meta','Global Steel Wire (GSW)','Los Corrales de Buelna','Fabricación de acero y alambrón. Planta de gran envergadura','Reductores grandes, mototambores para cintas de acero, motores de alta potencia','ALTA','Jefe Mantenimiento / Responsable Compras MRO'],
+  ['meta','Industrias Hergom','Santa Cruz de Bezana','Fabricación de calefactores, radiadores y aparatos térmicos','Motores y variadores para líneas de soldadura y pintura','ALTA','Jefe Mantenimiento Planta'],
+  ['meta','Fundiciones Especiales del Norte','Corrales / Polanco','Fundición de aceros especiales. Moldes y piezas de precisión','Reductores para hornos de fundición, mototambores, motovibradores','ALTA','Director Técnico / Compras'],
+  ['meta','Forjas del Norte (Tanos)','Torrelavega (Pol. Tanos-Viernoles)','Forja en caliente de piezas de acero para industria pesada','Reductores para prensas de forja, motores de alta potencia','ALTA','Jefe Mantenimiento'],
+  ['meta','Metalúrgica Cántabra de Aceros','Los Corrales / Valle Besaya','Fabricación de productos básicos de hierro, acero y ferroaleaciones','Motores y reductores para laminadoras y cintas','ALTA','Responsable Técnico'],
+  ['meta','Acieros del Besaya','Valle del Besaya','Producción y procesado de aceros para construcción y industria','Reductores para laminadoras, mototambores para cintas','ALTA','Jefe Mantenimiento'],
+  ['meta','Calderería del Cantábrico (CCC)','Astillero / Guarnizo','Calderería industrial, tanques y depósitos a presión','Reductores para equipos de proceso, motores agitadores','ALTA','Director Técnico'],
+  ['meta','Industrias Cántabras de Forja','Corrales de Buelna','Forja fría y mecanizado de piezas de acero','Variadores para prensas, motores, electrónica de control','ALTA','Jefe Mantenimiento'],
+  ['meta','Talleres Arjube','Revilla de Camargo (Pol. Trascueto)','Mecanizados, calderería y mantenimiento industrial CNC','Reductores a medida, motores para equipos propios, cálculo transmisión','ALTA','Responsable Técnico / Compras'],
+  ['meta','Grupo GIC Industrial','Astillero (Pol. Tirso González)','Mantenimiento industrial, automatización y proyectos eléctricos','Variadores Bonfiglioli, servos, electrónica industrial','ALTA','Director Técnico'],
+  ['meta','Oxido 21','Revilla de Camargo (Pol. Trascueto)','Reparación y mantenimiento de maquinaria eléctrica e industrial','Motores de recambio, variadores, reductores para clientes industriales','ALTA','Responsable Técnico Luis'],
+  ['meta','IMEM (Ind. Montañesas Eléctricas)','Santander','Fabricación y reparación de maquinaria eléctrica industrial','Reductores, motores, variadores para equipos propios','ALTA','Dirección Técnica'],
+  ['meta','SICMOP','Los Corrales de Buelna (Pol. Barros)','Reparación y mantenimiento de maquinaria industrial pesada (Hitachi, Bomag)','Reductores de recambio, mototambores para clientes industriales','ALTA','Director Técnico / Compras'],
+  ['meta','Fundiciones Cantábricas','Camargo / Los Corrales','Fundición de piezas industriales en gris y nodular','Reductores para hornos y mezcladores, motovibradores','ALTA','Director Técnico / Producción'],
+  ['meta','Metalúrgica Hakensa Cantabria','Torrelavega','Fundición y mecanizado de piezas metálicas','Motores para hornos de fundición, reductores de manipulación','MEDIA','Director Técnico'],
+  ['meta','Industrias Cantabras de Torneado','Camargo (Pol. Trascueto)','Torneado y mecanizado CNC de alta precisión','Variadores y motores para tornos y centros mecanizado','MEDIA','Jefe Producción'],
+  ['meta','Talleres Mecánicos Polanco','Polanco (Pol. Requejada)','Taller mecánico y mecanizados industriales varios','Reductores pequeños, motores para equipos de taller','MEDIA','Propietario / Responsable'],
+  ['meta','Coordinadora de Servicios Metalúrgicos','Medio Cudeyo','Servicios de mecanizado y transformación metalúrgica','Reductores y motores para maquinaria de clientes','MEDIA','Responsable Técnico'],
+  ['meta','Dicometal','Santa Cruz de Bezana','Distribución y transformación de materiales metálicos','Motores y variadores para equipos de corte y deformación','MEDIA','Responsable Compras'],
+  ['meta','Metalúrgicas Sierra Cantabria','Cantabria (polígonos varios)','Diseño, fabricación y mantenimiento de soluciones metálicas y acero inox','Reductores especiales, motores para equipos a medida','MEDIA','Director'],
+  ['meta','Nordinox','Marina de Cudeyo','Fabricación en acero inoxidable para alimentación y hostelería','Motores y reductores para líneas de producción en inox','MEDIA','Responsable Producción'],
+  ['meta','Industrias del Hierro Cantábrico','Torrelavega','Fabricación de productos de hierro para construcción e industria','Motores y variadores para equipos de trefilado','MEDIA','Jefe de Planta'],
+  ['meta','Aceralia / Arcelor Mittal (suministros norte)','Santander (oficina)','Mayor referencia siderúrgica nacional. Compras indirectas','Reductores y motores Bonfiglioli para sustitución en sus plantas','MEDIA','Responsable Compras Indirectas'],
+  ['meta','Reocín (industrial minero)','Reocín','Industrial minero-metalúrgico relevante','Mototambores para cintas, reductores para equipos de extracción','MEDIA','Responsable Mantenimiento'],
+  ['meta','Metalicas Mergo','Camargo (Pol. Raos)','Calderería y montajes industriales','Motores, variadores para talleres de clientes','BAJA','Responsable Técnico'],
+  ['meta','Chaysercal','Alfoz de Lloredo','Construcción metálica y calderería ligera','Motores, variadores para equipos de producción','BAJA','Director / Técnico'],
+  ['meta','Encomundi Sistemas para Construcción','Los Corrales de Buelna','Fabricación de estructuras y componentes para construcción industrial','Motores y variadores para líneas de producción','BAJA','Director Técnico'],
+  ['meta','Ciser Montajes Metálicos','Astillero','Montajes metálicos e industriales','Reductores y motores para instalaciones de clientes','BAJA','Director Técnico'],
+  ['meta','CMT Cantabria Calderería','Medio Cudeyo','Calderería industrial y construcciones metálicas','Reductores para instalaciones industriales, motovibradores','BAJA','Director Técnico'],
+  ['meta','Industrias Metálicas del Norte','Corrales de Buelna / Torrelavega','Fabricación de componentes metálicos para industria general','Variadores, motores, reductores Bonfiglioli para líneas de producción','MEDIA','Jefe Mantenimiento'],
+  ['meta','Talleres Bengoechea (estructuras)','Santander','Estructuras metálicas y montajes industriales','Motores y reductores para equipos de montaje','BAJA','Director'],
+  // DISTRIBUIDORES (30)
+  ['dist','Sumidecant S.L.','Guarnizo (Pol. Morero)','Ferretería industrial con reparto propio diario en Cantabria','Reventa de catálogo Bonfiglioli completo','ALTA','Director Comercial / Compras'],
+  ['dist','Suministros Industriales Colina','Santiago de Cartes (Pol. La Llanada)','Ferretería y suministros industriales desde 1987. Cubre valle Besaya','Reventa de elementos de transmisión y reductores','ALTA','Gerente / Responsable Compras'],
+  ['dist','Suministros Mendata','Santander','Especialista en conducción de fluidos y sector naval. Fabricación a medida','Canal para bombas y transmisiones en sector naval e industria química','ALTA','Director Comercial'],
+  ['dist','Vercan Minimizados','Santander','Distribuidor exclusivo regional de marcas industriales. Soldadura, gases','Partnership para ampliar catálogo hacia transmisiones','ALTA','Dirección'],
+  ['dist','Oxido 21','Revilla de Camargo (Pol. Trascueto)','Reparación de maquinaria eléctrica e industrial. Distribuidor recambios','Canal para motores de recambio y variadores a empresas industriales','ALTA','Luis (Responsable)'],
+  ['dist','Grupo GIC Industrial','Astillero','Mantenimiento industrial, automatización y proyectos eléctricos','Prescriptor e integrador de productos Bonfiglioli en proyectos','ALTA','Director Técnico'],
+  ['dist','SODERCAN (Soc. Desarrollo Cantabria)','Santander','Agencia pública de desarrollo industrial. Gestiona concursos y ayudas','Registrarse como proveedor; acceder a licitaciones de industria','ALTA','Área de Industria'],
+  ['dist','GIRA (Grupo Iniciativas Regionales Auto)','Cantabria','Clúster de automoción de Cantabria. Asociación sectorial','Acceso a todas las empresas del sector automoción de la región','ALTA','Secretaría GIRA'],
+  ['dist','Ingemega (ingeniería industrial)','Santander / Camargo','Ingeniería industrial y proyectos de automatización','Prescriptor de transmisiones en proyectos industriales','ALTA','Director Técnico'],
+  ['dist','Talleres Arjube','Revilla de Camargo','Mecanizados y calderería. Mantenimiento industrial CNC','Canal de prescripción de transmisiones para sus clientes industriales','ALTA','Responsable Técnico'],
+  ['dist','Grupo Ecol Industrial','Cantabria','Mantenimiento mecánico y eléctrico para industria química y alimentaria','Prescriptor de reductores y motores para plantas que mantienen','ALTA','Director Técnico'],
+  ['dist','Automatismos del Norte (AUTONOR)','Santander / Camargo','Automatización y sistemas de control industrial','Integración de variadores y electrónica Bonfiglioli en proyectos','ALTA','Director Técnico'],
+  ['dist','Mantenimiento Integral Norte (MIN)','Camargo','Contratos de mantenimiento integral para grandes plantas','Prescriptor e integrador de transmisiones en contratos mantenimiento','ALTA','Director Técnico'],
+  ['dist','SICMOP','Los Corrales de Buelna','Reparación de maquinaria pesada. Distribuidor oficial Hitachi, Bomag','Canal para clientes de minería y construcción industrial','MEDIA','Director Técnico'],
+  ['dist','Sumaser (Tornillería Cantabria)','Santander','Suministros industriales, tornillería, metrología. 35 años experiencia','Canal para elementos de transmisión menores y catálogo básico','MEDIA','Gerente / Responsable Compras'],
+  ['dist','MS Screws','Santander','Suministros industriales con exclusivas de marca (Ravenol, Felo, Knipex)','Posible ampliación de catálogo con productos Bonfiglioli','MEDIA','Gerente'],
+  ['dist','Construagro Cantabria','Cantabria (varios)','Suministros industriales y herramientas. Red local','Canal para clientes de construcción y obra industrial','MEDIA','Responsable Comercial'],
+  ['dist','Ibermatica (proyectos industria 4.0)','Santander (delegación)','Proyectos de digitalización e industria 4.0 en Cantabria','Integración electrónica Bonfiglioli en proyectos smart factory','MEDIA','Responsable Proyectos'],
+  ['dist','Ferreterías industriales Torrelavega zona','Torrelavega (varios)','Red de pequeñas ferreterías industriales en el 2º polo industrial','Reventa de elementos de transmisión básicos','MEDIA','Propietario / Gerente'],
+  ['dist','Mantenimientos Industriales Camargo (OEM)','Camargo (Pol. Trascueto)','Servicios de mantenimiento para plantas industriales del polígono','Prescripción y sustitución de componentes Bonfiglioli','ALTA','Responsable Técnico'],
+  ['dist','Iberdrola Servicios Industriales (norte)','Santander','Servicios de ingeniería y mantenimiento para sector energético','Prescripción en proyectos de energía e industria pesada','MEDIA','Responsable Compras Regional'],
+  ['dist','Cámara de Comercio de Cantabria','Santander','Entidad de representación empresarial. Acceso a red de empresas','Canal de acceso a empresas asociadas; colaborar en eventos','BAJA','Área de Industria'],
+  ['dist','Cámara de Comercio de Torrelavega','Torrelavega','Entidad de representación empresarial de la zona industrial TL-Besaya','Networking con empresas industriales del eje Torrelavega-Corrales','MEDIA','Área de Industria'],
+  ['dist','Gesta (Gestión Industrial)','Santander','Consultoría y gestión de proyectos industriales','Prescriptor técnico en proyectos de ingeniería industrial','MEDIA','Director'],
+  ['dist','Instalaciones Eléctricas del Norte (IELCAN)','Santander','Instalaciones eléctricas industriales y montajes','Canal de prescripción en proyectos de instalaciones con motores','MEDIA','Director Técnico'],
+  ['dist','Ferretería Industrial Revilla','Revilla de Camargo','Suministros industriales para empresas del polígono Trascueto','Canal de reventa de elementos básicos de transmisión','MEDIA','Propietario'],
+  ['dist','Logística Montaña (distribución industrial)','Interior Cantabria','Distribución de materiales industriales en zona rural','Canal para empresas del interior: Reinosa, Campoo','BAJA','Responsable Comercial'],
+  ['dist','Mantenimientos Metalúrgicas Sierra Cantabria','Cantabria (polígonos)','Mantenimiento integral industrial, fabricación metálica','Canal de prescripción para clientes de mantenimiento','MEDIA','Director'],
+  ['dist','AIDI (Asoc. Empresarios Industriales Cantabria)','Cantabria','Asociación empresarial sectorial','Networking y posibles acuerdos de colaboración cruzados','BAJA','Secretaría'],
+  ['dist','Asociación de Suministradores Industriales Cantabria','Cantabria','Agrupación de distribuidores industriales de la región','Networking y posibles acuerdos de colaboración cruzados','BAJA','Secretaría'],
+];
+
+// State
+const statuses = {}; // id -> 0..4
+const notes = {};    // id -> string
+let currentSector = 'all';
+let currentPriority = 'all';
+let currentStatusFilter = 'all';
+let sortField = null;
+let sortAsc = true;
+let currentDrawerIdx = null;
+
+const STATUS_LABELS = ['⬜ Sin contacto','📞 Contactado','🔄 En seguimiento','✅ Cliente','❌ Descartado'];
+const STATUS_CLASSES = ['s0','s1','s2','s3','s4'];
+
+function getData() {
+  let d = RAW.map((r, i) => ({
+    idx: i, sector: r[0], name: r[1], location: r[2],
+    activity: r[3], potential: r[4], priority: r[5], contact: r[6]
+  }));
+  if (currentSector !== 'all') d = d.filter(x => x.sector === currentSector);
+  if (currentPriority !== 'all') d = d.filter(x => x.priority === currentPriority);
+  if (currentStatusFilter !== 'all') {
+    d = d.filter(x => String(statuses[x.idx] || 0) === currentStatusFilter);
+  }
+  const q = document.getElementById('search').value.trim().toLowerCase();
+  if (q) d = d.filter(x => (x.name+x.location+x.activity+x.potential+x.contact).toLowerCase().includes(q));
+  if (sortField) {
+    d.sort((a,b) => {
+      const va = a[sortField]||'', vb = b[sortField]||'';
+      return sortAsc ? va.localeCompare(vb) : vb.localeCompare(va);
+    });
+  }
+  return d;
+}
+
+function render() {
+  const data = getData();
+  const tbody = document.getElementById('tbody');
+  const empty = document.getElementById('empty');
+  document.getElementById('result-count').textContent = data.length + ' resultado' + (data.length !== 1 ? 's' : '');
+
+  if (data.length === 0) {
+    tbody.innerHTML = '';
+    empty.style.display = '';
+    return;
+  }
+  empty.style.display = 'none';
+
+  tbody.innerHTML = data.map((co, i) => {
+    const st = statuses[co.idx] || 0;
+    const nt = notes[co.idx] || '';
+    const s = SECTORS[co.sector];
+    return `<tr id="row-${co.idx}" onclick="openDrawer(${co.idx})" style="cursor:pointer">
+      <td style="color:var(--gray-500);font-family:'DM Mono',monospace;font-size:11px">${i+1}</td>
+      <td>
+        <span class="sector-pill ${s.pill}">${s.icon} ${s.label}</span>
+        <div class="co-name" style="margin-top:4px">${co.name}</div>
+        <div class="co-contact">${co.contact}</div>
+      </td>
+      <td>
+        <div class="co-location">${co.location}</div>
+      </td>
+      <td class="col-activity"><div class="co-activity">${co.activity}</div></td>
+      <td class="col-potential"><div class="co-potential">${co.potential}</div></td>
+      <td><span class="badge badge-${co.priority.toLowerCase()}">${co.priority}</span></td>
+      <td onclick="event.stopPropagation()">
+        <select class="status-select ${STATUS_CLASSES[st]}" onchange="updateStatus(${co.idx},this.value,this)">
+          ${STATUS_LABELS.map((l,j)=>`<option value="${j}"${j===st?' selected':''}>${l}</option>`).join('')}
+        </select>
+      </td>
+      <td onclick="event.stopPropagation()">
+        <textarea class="note-input" rows="2" placeholder="Notas..." onchange="updateNote(${co.idx},this.value)">${nt}</textarea>
+      </td>
+      <td onclick="event.stopPropagation();openDrawer(${co.idx})" style="color:var(--gray-500);cursor:pointer;font-size:16px;">›</td>
+    </tr>`;
+  }).join('');
+  updateStats();
+}
+
+function updateStatus(idx, val, sel) {
+  statuses[idx] = parseInt(val);
+  sel.className = 'status-select ' + STATUS_CLASSES[parseInt(val)];
+  updateStats();
+  if (currentStatusFilter !== 'all') render();
+  saveToStorage();
+}
+
+function updateNote(idx, val) {
+  notes[idx] = val;
+  saveToStorage();
+}
+
+function updateStats() {
+  const all = RAW.length;
+  const alta = RAW.filter((r,i) => r[5]==='ALTA').length;
+  const contacted = Object.values(statuses).filter(v => v > 0).length;
+  const pct = Math.round(contacted/all*100);
+  document.getElementById('hstat-total').textContent = all;
+  document.getElementById('hstat-alta').textContent = alta;
+  document.getElementById('hstat-contactadas').textContent = contacted;
+  document.getElementById('hstat-pct').textContent = pct + '%';
+  document.getElementById('progress-txt').textContent = `${contacted} de ${all} contactadas`;
+  document.getElementById('progress-bar').style.width = pct + '%';
+
+  // Update sidebar counts
+  const sectors = ['all','auto','quim','alim','meta','dist'];
+  sectors.forEach(s => {
+    const cnt = s === 'all' ? RAW.length : RAW.filter(r => r[0]===s).length;
+    document.getElementById('cnt-'+s).textContent = cnt;
+  });
+}
+
+function setSector(s) {
+  currentSector = s;
+  document.querySelectorAll('.sector-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('btn-'+s).classList.add('active');
+  render();
+}
+
+function setPriority(p) {
+  currentPriority = p;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('prio-'+p).classList.add('active');
+  render();
+}
+
+function setStatusFilter(s) {
+  currentStatusFilter = s;
+  document.querySelectorAll('.status-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('sf-'+s).classList.add('active');
+  render();
+}
+
+function sortBy(field) {
+  if (sortField === field) sortAsc = !sortAsc;
+  else { sortField = field; sortAsc = true; }
+  render();
+}
+
+function openDrawer(idx) {
+  currentDrawerIdx = idx;
+  const co = RAW[idx];
+  const s = SECTORS[co[0]];
+  document.getElementById('d-sector').textContent = s.label;
+  document.getElementById('d-name').textContent = co[1];
+  document.getElementById('d-location').textContent = '📍 ' + co[2];
+  document.getElementById('d-activity').textContent = co[3];
+  document.getElementById('d-potential').textContent = co[4];
+  document.getElementById('d-contact').textContent = co[6];
+  document.getElementById('d-status').value = statuses[idx] || 0;
+  document.getElementById('d-notes').value = notes[idx] || '';
+  document.getElementById('d-pitch').textContent = PITCHES[co[0]];
+  document.getElementById('overlay').classList.add('open');
+  document.getElementById('drawer').classList.add('open');
+}
+
+function closeDrawer() {
+  document.getElementById('overlay').classList.remove('open');
+  document.getElementById('drawer').classList.remove('open');
+  currentDrawerIdx = null;
+}
+
+function updateStatusFromDrawer() {
+  if (currentDrawerIdx === null) return;
+  const val = parseInt(document.getElementById('d-status').value);
+  statuses[currentDrawerIdx] = val;
+  updateStats();
+  render();
+  saveToStorage();
+}
+
+function updateNotesFromDrawer() {
+  if (currentDrawerIdx === null) return;
+  notes[currentDrawerIdx] = document.getElementById('d-notes').value;
+  saveToStorage();
+}
+
+function copyEmail() {
+  if (currentDrawerIdx === null) return;
+  const co = RAW[currentDrawerIdx];
+  const txt = `Asunto: Reductores y transmisiones Bonfiglioli para ${co[1]} — Distribuidor oficial BEST Gold
+
+Buenos días,
+
+Me pongo en contacto porque somos Laucirica Transmisiones, el único distribuidor BEST Gold Bonfiglioli en España. Esta certificación nos permite ofrecer servicio express 2-3h, asistencia técnica 24h y técnicos en planta.
+
+Creo que podemos aportar valor a su equipo de mantenimiento en ${co[1]}. ¿Tendría disponibilidad para una reunión de 20 minutos?
+
+Un saludo,
+Laucirica Transmisiones
+www.lauciricatransmisiones.es`;
+  navigator.clipboard.writeText(txt).then(() => showToast('Email copiado al portapapeles ✓'));
+}
+
+function exportCSV() {
+  const data = getData();
+  const headers = ['#','Sector','Empresa','Localidad','Actividad','Potencial Bonfiglioli','Prioridad','Contacto','Estado','Notas'];
+  const rows = data.map((co,i) => [
+    i+1, SECTORS[co.sector].label, co.name, co.location,
+    co.activity, co.potential, co.priority, co.contact,
+    STATUS_LABELS[statuses[co.idx]||0].replace(/[^\w ]/g,'').trim(),
+    (notes[co.idx]||'').replace(/\n/g,' ')
+  ]);
+  const csv = [headers, ...rows].map(r => r.map(v => `"${String(v).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const a = document.createElement('a');
+  a.href = 'data:text/csv;charset=utf-8,\uFEFF' + encodeURIComponent(csv);
+  a.download = 'prospeccion_cantabria_' + new Date().toISOString().slice(0,10) + '.csv';
+  a.click();
+  showToast('CSV exportado ✓');
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+function saveToStorage() {
+  try {
+    localStorage.setItem('crm_cantabria_v2', JSON.stringify({ statuses, notes, saved: new Date().toISOString() }));
+    const ind = document.getElementById('save-indicator');
+    if (ind) { ind.textContent = '💾 guardado ' + new Date().toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'}); }
+  } catch(e) { showToast('⚠ No se pudo guardar (almacenamiento lleno)'); }
+}
+
+function loadFromStorage() {
+  try {
+    const raw = localStorage.getItem('crm_cantabria_v2') || localStorage.getItem('crm_cantabria');
+    if (raw) {
+      const d = JSON.parse(raw);
+      Object.assign(statuses, d.statuses || {});
+      Object.assign(notes, d.notes || {});
+    }
+  } catch(e) {}
+}
+
+function resetData() {
+  if (!confirm('¿Seguro que quieres borrar todos los estados y notas? Esta acción no se puede deshacer.')) return;
+  Object.keys(statuses).forEach(k => delete statuses[k]);
+  Object.keys(notes).forEach(k => delete notes[k]);
+  localStorage.removeItem('crm_cantabria_v2');
+  localStorage.removeItem('crm_cantabria');
+  render();
+  showToast('Datos reiniciados ✓');
+}
+
+loadFromStorage();
+render();
+</script>
+</body>
+</html>
