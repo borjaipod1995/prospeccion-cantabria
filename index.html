@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Prospección Cantabria — Laucirica Transmisiones</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -227,6 +229,29 @@
   .toast { position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%); background: var(--navy); color: white; padding: 10px 20px; border-radius: 8px; font-size: 13px; opacity: 0; transition: opacity 0.3s; z-index: 999; pointer-events: none; }
   .toast.show { opacity: 1; }
 
+
+  /* MAP VIEW */
+  .view-toggle { display:flex; gap:6px; }
+  .view-btn { padding:6px 14px; border:1px solid var(--gray-300); border-radius:8px; background:white; font-family:'DM Sans',sans-serif; font-size:12px; font-weight:500; color:var(--gray-700); cursor:pointer; transition:all 0.15s; }
+  .view-btn.active { background:var(--navy); color:white; border-color:var(--navy); }
+  #map-container { flex:1; display:none; position:relative; }
+  #map-container.visible { display:flex; }
+  #leaflet-map { flex:1; height:100%; min-height:500px; }
+  .map-sidebar { width:300px; background:white; border-left:1px solid var(--gray-200); overflow-y:auto; display:flex; flex-direction:column; }
+  .map-sidebar-header { padding:1rem; border-bottom:1px solid var(--gray-200); font-size:13px; font-weight:600; color:var(--navy); }
+  .map-sidebar-list { flex:1; overflow-y:auto; }
+  .map-co-item { padding:10px 1rem; border-bottom:1px solid var(--gray-200); cursor:pointer; transition:background 0.1s; }
+  .map-co-item:hover { background:var(--gray-100); }
+  .map-co-item.highlighted { background:#edf4ff; }
+  .map-co-name { font-size:13px; font-weight:600; color:var(--navy2); }
+  .map-co-loc { font-size:11px; color:var(--gray-500); margin-top:2px; }
+  .map-co-badges { display:flex; gap:4px; margin-top:4px; flex-wrap:wrap; }
+  .leaflet-popup-content { font-family:'DM Sans',sans-serif; font-size:13px; min-width:200px; }
+  .popup-name { font-weight:600; color:var(--navy); font-size:14px; margin-bottom:4px; }
+  .popup-loc { font-size:11px; color:#666; margin-bottom:6px; }
+  .popup-activity { font-size:12px; color:#444; margin-bottom:6px; line-height:1.5; }
+  .popup-btn { display:inline-block; padding:5px 12px; background:#0f1e3c; color:white; border-radius:6px; font-size:11px; font-weight:500; cursor:pointer; border:none; margin-top:4px; }
+
   /* Responsive col hide */
   @media (max-width: 1100px) { .col-potential { display: none; } }
   @media (max-width: 900px) { .col-activity { display: none; } }
@@ -337,6 +362,10 @@
         <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
         <input class="search-input" id="search" placeholder="Buscar empresa, localidad, actividad..." oninput="render()">
       </div>
+      <div class="view-toggle">
+        <button class="view-btn active" id="btn-table-view" onclick="setView('table')">☰ Lista</button>
+        <button class="view-btn" id="btn-map-view" onclick="setView('map')">🗺 Mapa</button>
+      </div>
       <span class="result-count" id="result-count">156 resultados</span>
       <button class="export-btn" onclick="exportCSV()">⬇ Exportar CSV</button>
       <button class="export-btn" style="background:var(--gray-500)" onclick="resetData()" title="Borrar todos los estados y notas">🗑 Reset</button>
@@ -364,6 +393,16 @@
           <div class="empty-icon">🔍</div>
           <div class="empty-txt">No hay empresas que coincidan con los filtros</div>
         </div>
+      </div>
+    </div>
+  </div>
+    <div id="map-container">
+      <div id="leaflet-map"></div>
+      <div class="map-sidebar">
+        <div class="map-sidebar-header">
+          <span id="map-count">0 empresas</span> en el mapa
+        </div>
+        <div class="map-sidebar-list" id="map-list"></div>
       </div>
     </div>
   </div>
@@ -671,6 +710,7 @@ function render() {
     </tr>`;
   }).join('');
   updateStats();
+  if (currentView === 'map') renderMap();
 }
 
 function updateStatus(idx, val, sel) {
@@ -839,6 +879,298 @@ function resetData() {
   localStorage.removeItem('crm_cantabria');
   render();
   showToast('Datos reiniciados ✓');
+}
+
+
+// ── COORDENADAS (lat, lng) por índice RAW ──────────────────────────────
+// Agrupadas por zona geográfica de Cantabria
+const COORDS = [
+  // AUTOMOCIÓN (0-31)
+  [43.4622,-3.8100], // 0 Daimler Buses España - Santander
+  [43.3350,-4.0590], // 1 Bridgestone Hispania - Puente San Miguel
+  [43.3490,-3.3940], // 2 Teknia Ampuero
+  [43.3850,-3.8580], // 3 Maflow Spain Automotive - Guarnizo
+  [43.4622,-3.8100], // 4 Ecrimesa - Santander
+  [43.4400,-3.8200], // 5 Mecansa - Cantabria
+  [43.4622,-3.8100], // 6 Mimecrisa - Santander
+  [43.3920,-3.8200], // 7 Edscha Santander - Camargo
+  [43.4200,-3.9100], // 8 Casuso Propellers
+  [43.4622,-3.8100], // 9 IMEM - Santander Adarzo
+  [43.3520,-3.9520], // 10 Leading Metal - San Felices de Buelna
+  [43.3920,-3.8200], // 11 Ind. Cantabras Torneado - Camargo
+  [43.3850,-3.8580], // 12 Ind. Jacinto Herrero - Astillero
+  [43.4750,-3.9050], // 13 Industrias Hergom - Santa Cruz de Bezana
+  [43.4540,-3.4570], // 14 Estampaciones Metálicas - Santoña
+  [43.3520,-3.9520], // 15 Metaltres Peferlui - Torrelavega
+  [43.3540,-3.9540], // 16 Forja Estampación Norte - Torrelavega Tanos
+  [43.3520,-3.9520], // 17 SOME - San Felices de Buelna
+  [43.3620,-3.9820], // 18 Metalúrgica Hakensa - Torrelavega
+  [43.0000,-4.1500], // 19 Componentes Hergulan - Campoo de Suso
+  [43.3290,-3.8620], // 20 Metalúrgicas Obregón - Villaescusa
+  [43.3290,-3.8620], // 21 Nomocan Montajes - Villaescusa
+  [43.4230,-3.7320], // 22 MPL Cantabria 2000 - Marina de Cudeyo
+  [43.3920,-3.8200], // 23 Cortes Metálicos Norte - Camargo
+  [43.3600,-4.2400], // 24 Metanor Metálicos - Cabezón de la Sal
+  [43.3850,-3.8580], // 25 Ciser Montajes - Astillero
+  [43.4230,-3.7320], // 26 Construcciones Metálicas Tadefor - Medio Cudeyo
+  [43.4230,-3.7320], // 27 CMT Cantabria Calderería - Medio Cudeyo
+  [43.3920,-3.8200], // 28 Metalicas Mergo - Camargo Raos
+  [43.4622,-3.8100], // 29 Mecanica Braosera - Santander
+  [43.3620,-3.9820], // 30 Estructuras Metálicas Torrelavega
+  [43.4622,-3.8100], // 31 Metalicas Santander
+
+  // QUÍMICA (32-63)
+  [43.3620,-3.9820], // 32 Solvay Torrelavega
+  [43.3620,-3.9820], // 33 Bondalti
+  [43.3620,-3.9820], // 34 Air Liquide Cantabria
+  [43.3620,-3.9820], // 35 Kemira Cantabria
+  [43.3490,-3.9820], // 36 K&S Esco - Polanco
+  [43.4622,-3.8100], // 37 Cantabria Labs - Santander
+  [43.4200,-3.8500], // 38 Moehs Cántabra
+  [43.3540,-3.9540], // 39 ASPLA Grupo Armando Álvarez - Torrelavega
+  [43.3620,-3.9820], // 40 Sniace - Torrelavega
+  [43.4300,-3.8300], // 41 Sydney Chemical Solutions
+  [43.3620,-3.9820], // 42 Plastibher - Torrelavega
+  [43.4740,-3.5670], // 43 Plasnor - Bárcena de Cicero
+  [43.3620,-3.9820], // 44 Vitrificados del Norte - Torrelavega
+  [43.0500,-4.1400], // 45 Industrias Químicas Reinosa - Reinosa
+  [43.3920,-3.8200], // 46 Grupo Rubiera - Camargo
+  [43.3620,-3.9820], // 47 Pinturas Cantabria - Torrelavega
+  [43.4300,-3.8500], // 48 Poliplastic Norte
+  [43.3920,-3.8200], // 49 Quimicamp - Camargo
+  [43.4622,-3.8100], // 50 Ercros delegación - Santander
+  [43.4300,-3.8500], // 51 Resinas del Norte
+  [43.3490,-3.9820], // 52 Industrias Químicas Besaya - Valle Besaya
+  [43.3620,-3.9820], // 53 Teka Industrial - Torrelavega
+  [43.4622,-3.8100], // 54 Air Products - Santander
+  [43.3620,-3.9820], // 55 Aspasur - Torrelavega
+  [43.4622,-3.8100], // 56 Química Ibérica Norte - Santander
+  [43.4622,-3.8100], // 57 Dow Chemical delegación - Santander
+  [43.4622,-3.8100], // 58 Laboratorios Diafarm - Santander
+  [43.4300,-3.8500], // 59 Laboratorio Hipra
+  [43.4622,-3.8100], // 60 Farmacológica Cantabria - Santander
+  [43.4622,-3.8100], // 61 Euroespes Cantabria - Santander
+  [43.4622,-3.8100], // 62 Nanotec PCTCAN - Santander
+  [43.4622,-3.8100], // 63 (padding)
+
+  // ALIMENTACIÓN (64-94)
+  [43.3100,-3.8700], // 64 Nestlé La Penilla - Cayón
+  [43.4200,-3.8500], // 65 CAPSA Cantabria
+  [43.4000,-3.4570], // 66 Conservas Calvo - Laredo/Santoña
+  [43.4540,-3.4570], // 67 Conservas Ortiz - Santoña
+  [43.4200,-3.8500], // 68 Grupo Alianza lácteos
+  [43.4230,-3.7320], // 69 Aguas de Solares - Medio Cudeyo
+  [43.4200,-3.8500], // 70 Lactalis Cantabria
+  [43.4540,-3.4570], // 71 Conservas Solano Arriola - Santoña
+  [43.4300,-3.8800], // 72 Consorcio Aralar embutidos
+  [43.3620,-3.9820], // 73 Industrias Cárnicas Jocar - Torrelavega
+  [43.4400,-3.6500], // 74 Río Frío - costa cantábrica
+  [43.3540,-3.9540], // 75 Bebidas Refrescantes Norte - Torrelavega
+  [43.4540,-3.4570], // 76 Conservas La Cucharita - Santoña
+  [43.4540,-3.4570], // 77 Conservas Yurrita - Santoña
+  [43.3620,-3.9820], // 78 Cárnicas Cantábricas - Torrelavega
+  [43.3800,-4.0500], // 79 Lácteos Cantabria cooperativa
+  [43.4622,-3.8100], // 80 Frigoríficos del Norte - Santander
+  [43.3620,-3.9820], // 81 Panadería Bollería Industrial Norte - Torrelavega
+  [43.4300,-3.8500], // 82 Grupo Siro planta norte
+  [43.4200,-3.8500], // 83 Industrias Lácteas Lacesa
+  [43.4540,-3.4570], // 84 Conservas Serrats - Santoña
+  [43.4200,-3.8700], // 85 Agropal alimentos animales
+  [43.3800,-4.0500], // 86 Corlasa carnes - interior
+  [43.4540,-3.4570], // 87 Anchoas del Cantábrico - Santoña/Laredo/Castro
+  [43.3620,-3.9820], // 88 Galletas Lolín - Torrelavega
+  [43.3800,-4.0500], // 89 Central de Quesos de Cantabria
+  [43.4622,-3.8100], // 90 Cofradías de Pescadores - Santander
+  [43.4200,-3.8500], // 91 Danone planta norte
+  [43.4622,-3.8100], // 92 Leche Pascual delegación - Santander
+  [43.4622,-3.8100], // 93 Tropicana - Santander
+  [43.4622,-3.8100], // 94 Grupo Hijos Rivera - Santander
+
+  // METALURGIA (95-125)
+  [43.3450,-4.0600], // 95 Global Steel Wire GSW - Los Corrales
+  [43.4750,-3.9050], // 96 Industrias Hergom - Santa Cruz Bezana
+  [43.3490,-3.9820], // 97 Fundiciones Especiales Norte - Corrales/Polanco
+  [43.3540,-3.9540], // 98 Forjas del Norte - Torrelavega Tanos
+  [43.3450,-4.0600], // 99 Metalúrgica Cántabra Aceros - Los Corrales
+  [43.3490,-3.9820], // 100 Acieros del Besaya - Valle Besaya
+  [43.3850,-3.8580], // 101 Calderería del Cantábrico - Astillero
+  [43.3450,-4.0600], // 102 Industrias Cántabras Forja - Corrales
+  [43.3890,-3.8250], // 103 Talleres Arjube - Revilla de Camargo
+  [43.3850,-3.8580], // 104 Grupo GIC Industrial - Astillero
+  [43.3890,-3.8250], // 105 Oxido 21 - Revilla de Camargo
+  [43.4622,-3.8100], // 106 IMEM - Santander
+  [43.3450,-4.0600], // 107 SICMOP - Los Corrales Barros
+  [43.3920,-3.8200], // 108 Fundiciones Cantábricas - Camargo
+  [43.3620,-3.9820], // 109 Metalúrgica Hakensa - Torrelavega
+  [43.3920,-3.8200], // 110 Ind. Cantabras Torneado - Camargo
+  [43.3490,-3.9820], // 111 Talleres Mecánicos Polanco
+  [43.4230,-3.7320], // 112 Coordinadora Servicios Metalúrgicos - Medio Cudeyo
+  [43.4750,-3.9050], // 113 Dicometal - Santa Cruz Bezana
+  [43.4200,-3.8500], // 114 Metalúrgicas Sierra Cantabria
+  [43.4230,-3.7320], // 115 Nordinox - Marina de Cudeyo
+  [43.3620,-3.9820], // 116 Industrias Hierro Cantábrico - Torrelavega
+  [43.4622,-3.8100], // 117 Aceralia/Arcelor Mittal - Santander
+  [43.4680,-3.9720], // 118 Reocín
+  [43.3920,-3.8200], // 119 Metalicas Mergo - Camargo
+  [43.3290,-4.3200], // 120 Chaysercal - Alfoz de Lloredo
+  [43.3450,-4.0600], // 121 Encomundi - Los Corrales
+  [43.3850,-3.8580], // 122 Ciser Montajes - Astillero
+  [43.4230,-3.7320], // 123 CMT Cantabria Calderería - Medio Cudeyo
+  [43.3450,-4.0600], // 124 Industrias Metálicas Norte - Corrales
+  [43.4622,-3.8100], // 125 Talleres Bengoechea - Santander
+
+  // DISTRIBUIDORES (126-155)
+  [43.3850,-3.8580], // 126 Sumidecant - Guarnizo
+  [43.3410,-4.0150], // 127 Suministros Colina - Santiago de Cartes
+  [43.4622,-3.8100], // 128 Suministros Mendata - Santander
+  [43.4622,-3.8100], // 129 Vercan Minimizados - Santander
+  [43.3890,-3.8250], // 130 Oxido 21 dist - Revilla de Camargo
+  [43.3850,-3.8580], // 131 Grupo GIC dist - Astillero
+  [43.4622,-3.8100], // 132 SODERCAN - Santander
+  [43.4200,-3.8500], // 133 GIRA Cantabria
+  [43.4622,-3.8100], // 134 Ingemega - Santander
+  [43.3890,-3.8250], // 135 Talleres Arjube dist - Revilla de Camargo
+  [43.4300,-3.8500], // 136 Grupo Ecol Industrial
+  [43.4622,-3.8100], // 137 Automatismos del Norte AUTONOR - Santander
+  [43.3920,-3.8200], // 138 Mantenimiento Integral Norte - Camargo
+  [43.3450,-4.0600], // 139 SICMOP dist - Los Corrales
+  [43.4622,-3.8100], // 140 Sumaser - Santander
+  [43.4622,-3.8100], // 141 MS Screws - Santander
+  [43.4300,-3.8500], // 142 Construagro Cantabria
+  [43.4622,-3.8100], // 143 Ibermatica - Santander
+  [43.3620,-3.9820], // 144 Ferreterías Torrelavega
+  [43.3920,-3.8200], // 145 Mantenimientos Industriales Camargo
+  [43.4622,-3.8100], // 146 Iberdrola Servicios - Santander
+  [43.4622,-3.8100], // 147 Cámara Comercio Cantabria - Santander
+  [43.3620,-3.9820], // 148 Cámara Comercio Torrelavega
+  [43.4622,-3.8100], // 149 Gesta - Santander
+  [43.4622,-3.8100], // 150 IELCAN - Santander
+  [43.3890,-3.8250], // 151 Ferretería Industrial Revilla
+  [43.3800,-4.0500], // 152 Logística Montaña - interior
+  [43.4200,-3.8500], // 153 Metalúrgicas Sierra dist
+  [43.4200,-3.8500], // 154 AIDI
+  [43.4200,-3.8500], // 155 Asociación Suministradores Industriales
+];
+
+// ── MAP STATE ─────────────────────────────────────────────────────────────
+let leafletMap = null;
+let mapMarkers = [];
+let currentView = 'table';
+
+const SECTOR_COLORS = {
+  auto: '#1e5fa8',
+  quim: '#0f6e56',
+  alim: '#e07b2a',
+  meta: '#8b1a1a',
+  dist: '#4a1a8b',
+};
+
+const PRIO_RADIUS = { ALTA: 10, MEDIA: 7, BAJA: 5 };
+
+function setView(v) {
+  currentView = v;
+  document.getElementById('btn-table-view').classList.toggle('active', v === 'table');
+  document.getElementById('btn-map-view').classList.toggle('active', v === 'map');
+  document.getElementById('table-area') && (document.getElementById('table-area').style.display = v === 'table' ? '' : 'none');
+  // find table-area
+  const ta = document.querySelector('.table-area');
+  if (ta) ta.style.display = v === 'table' ? '' : 'none';
+  const mc = document.getElementById('map-container');
+  if (v === 'map') {
+    mc.classList.add('visible');
+    initMap();
+    renderMap();
+  } else {
+    mc.classList.remove('visible');
+  }
+}
+
+function initMap() {
+  if (leafletMap) return;
+  leafletMap = L.map('leaflet-map').setView([43.38, -3.95], 10);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap contributors',
+    maxZoom: 18,
+  }).addTo(leafletMap);
+}
+
+function makeMarkerIcon(sector, priority, status) {
+  const color = SECTOR_COLORS[sector] || '#444';
+  const r = PRIO_RADIUS[priority] || 7;
+  const st = status || 0;
+  const ring = st === 3 ? '#1a7a4a' : st === 2 ? '#9c6400' : st === 1 ? '#1e5fa8' : 'rgba(255,255,255,0.8)';
+  const ringW = st > 0 ? 3 : 2;
+  return L.divIcon({
+    className: '',
+    html: `<div style="width:${r*2}px;height:${r*2}px;border-radius:50%;background:${color};border:${ringW}px solid ${ring};box-shadow:0 2px 6px rgba(0,0,0,0.3);"></div>`,
+    iconSize: [r*2, r*2],
+    iconAnchor: [r, r],
+  });
+}
+
+function renderMap() {
+  if (!leafletMap) return;
+  mapMarkers.forEach(m => leafletMap.removeLayer(m));
+  mapMarkers = [];
+
+  const data = getData();
+  const mapList = document.getElementById('map-list');
+  document.getElementById('map-count').textContent = data.length;
+  mapList.innerHTML = '';
+
+  data.forEach((co, i) => {
+    const coord = COORDS[co.idx];
+    if (!coord) return;
+    const [lat, lng] = coord;
+    const st = statuses[co.idx] || 0;
+    const s = SECTORS[co.sector];
+    const icon = makeMarkerIcon(co.sector, co.priority, st);
+
+    const marker = L.marker([lat, lng], { icon })
+      .addTo(leafletMap)
+      .bindPopup(`
+        <div class="popup-name">${co.name}</div>
+        <div class="popup-loc">📍 ${co.location}</div>
+        <span class="badge badge-${co.priority.toLowerCase()}">${co.priority}</span>
+        <div class="popup-activity" style="margin-top:6px">${co.activity}</div>
+        <div style="margin-top:6px;font-size:11px;color:#1e5fa8"><strong>Potencial:</strong> ${co.potential}</div>
+        <div style="margin-top:4px;font-size:11px;color:#666"><strong>Contacto:</strong> ${co.contact}</div>
+        <button class="popup-btn" onclick="openDrawer(${co.idx})">Ver ficha completa</button>
+      `, { maxWidth: 280 });
+
+    marker.on('click', () => {
+      document.querySelectorAll('.map-co-item').forEach(el => el.classList.remove('highlighted'));
+      const item = document.getElementById('mapitem-' + co.idx);
+      if (item) { item.classList.add('highlighted'); item.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
+    });
+
+    mapMarkers.push(marker);
+
+    // sidebar list item
+    const div = document.createElement('div');
+    div.className = 'map-co-item';
+    div.id = 'mapitem-' + co.idx;
+    div.innerHTML = `
+      <div class="map-co-name">${co.name}</div>
+      <div class="map-co-loc">📍 ${co.location}</div>
+      <div class="map-co-badges">
+        <span class="sector-pill ${s.pill}">${s.icon} ${s.label}</span>
+        <span class="badge badge-${co.priority.toLowerCase()}">${co.priority}</span>
+      </div>`;
+    div.onclick = () => {
+      leafletMap.setView([lat, lng], 13);
+      marker.openPopup();
+      document.querySelectorAll('.map-co-item').forEach(el => el.classList.remove('highlighted'));
+      div.classList.add('highlighted');
+    };
+    mapList.appendChild(div);
+  });
+
+  // Fit bounds to visible markers
+  if (mapMarkers.length > 0) {
+    const group = L.featureGroup(mapMarkers);
+    leafletMap.fitBounds(group.getBounds().pad(0.1));
+  }
 }
 
 loadFromStorage();
