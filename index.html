@@ -362,15 +362,11 @@
   @media (max-width: 900px) { .col-activity { display: none; } }
   @media (max-width: 750px) { .sidebar { display: none; } }
 </style>
-<script type="module">
-// ── FIREBASE INIT (module scope, exposes to window) ──────────────────────
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword,
-         signOut, onAuthStateChanged, updateProfile }
-  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { getDatabase, ref, onValue, set, update, remove, push, serverTimestamp, onDisconnect }
-  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
-
+<!-- Firebase Compat SDK (global, no modules needed) -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+<script>
 const firebaseConfig = {
   apiKey: "AIzaSyB9w_D-oGgGeCkttaZYmShACxIJ2zaLHN8",
   authDomain: "laucirica-crm.firebaseapp.com",
@@ -380,15 +376,10 @@ const firebaseConfig = {
   messagingSenderId: "430461844124",
   appId: "1:430461844124:web:451c0823c37596ab5e0b59"
 };
-
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getDatabase(app);
-
-// Expose Firebase API to global scope for non-module scripts
-window._fb = { auth, db, ref, onValue, set, update, remove, push, serverTimestamp,
-               onDisconnect, signInWithEmailAndPassword, createUserWithEmailAndPassword,
-               signOut, onAuthStateChanged, updateProfile };
+firebase.initializeApp(firebaseConfig);
+window._auth = firebase.auth();
+window._db = firebase.database();
+window._fbReady = true;
 </script>
 
 </head>
@@ -1056,11 +1047,10 @@ function saveToStorage() {
   setSyncDot('syncing');
   clearTimeout(_syncDebounce);
   _syncDebounce = setTimeout(() => {
-    const { db, ref, update, serverTimestamp } = window._fb;
-    update(ref(db, 'crm'), {
+    window._db.ref('crm').update({
       statuses: Object.fromEntries(Object.entries(statuses).map(([k,v]) => [k, v])),
       notes: Object.fromEntries(Object.entries(notes).map(([k,v]) => [k, v])),
-      lastUpdated: serverTimestamp(),
+      lastUpdated: firebase.database.ServerValue.TIMESTAMP,
       lastUpdatedBy: _fbUser.displayName || _fbUser.email,
     }).then(() => {
       setSyncDot('ok');
@@ -1077,10 +1067,8 @@ function loadFromStorage() {
 function startFirebaseListeners() {
   if (_listening) return;
   _listening = true;
-  const { db, ref, onValue } = window._fb;
-
   // Main data listener — real-time sync
-  onValue(ref(db, 'crm'), (snap) => {
+  window._db.ref('crm').on('value', (snap) => {
     const data = snap.val() || {};
     const remoteStatuses = data.statuses || {};
     const remoteNotes = data.notes || {};
@@ -1096,19 +1084,19 @@ function startFirebaseListeners() {
   });
 
   // Custom companies listener
-  onValue(ref(db, 'customCompanies'), (snap) => {
+  window._db.ref('customCompanies').on('value', (snap) => {
     customCompanies = snap.val() ? Object.values(snap.val()) : [];
     render();
   });
 
   // Activity log listener
-  onValue(ref(db, 'activity'), (snap) => {
+  window._db.ref('activity').on('value', (snap) => {
     const acts = snap.val() ? Object.values(snap.val()).reverse().slice(0,30) : [];
     renderActivity(acts);
   });
 
   // Online presence listener
-  onValue(ref(db, 'presence'), (snap) => {
+  window._db.ref('presence').on('value', (snap) => {
     const presence = snap.val() || {};
     renderOnlineUsers(Object.values(presence));
   });
@@ -1116,8 +1104,7 @@ function startFirebaseListeners() {
 
 function logActivity(action, companyName) {
   if (!_fbUser) return;
-  const { db, ref, push, serverTimestamp } = window._fb;
-  push(ref(db, 'activity'), {
+  window._db.ref('activity').push({
     user: _fbUser.displayName || _fbUser.email.split('@')[0],
     action, company: companyName,
     ts: Date.now(),
@@ -1157,17 +1144,15 @@ function renderOnlineUsers(users) {
 
 function setupPresence() {
   if (!_fbUser) return;
-  const { db, ref, set, onDisconnect, serverTimestamp } = window._fb;
   const uid = _fbUser.uid;
-  const presRef = ref(db, 'presence/' + uid);
-  set(presRef, { name: _fbUser.displayName || _fbUser.email.split('@')[0], ts: Date.now() });
-  onDisconnect(presRef).remove();
+  const presRef = window._db.ref('presence/' + uid);
+  presRef.set({ name: _fbUser.displayName || _fbUser.email.split('@')[0], ts: Date.now() });
+  presRef.onDisconnect().remove();
 }
 
 function resetData() {
   if (!confirm('¿Seguro? Esto borra TODOS los estados y notas para todo el equipo.')) return;
-  const { db, ref, set } = window._fb;
-  set(ref(db, 'crm'), { statuses: {}, notes: {}, lastUpdated: Date.now(), lastUpdatedBy: _fbUser?.displayName || '?' })
+  window._db.ref('crm').set({ statuses: {}, notes: {}, lastUpdated: Date.now(), lastUpdatedBy: _fbUser?.displayName || '?' })
     .then(() => { showToast('Datos reiniciados para todo el equipo ✓'); logActivity('Reinició todos los datos'); });
 }
 
@@ -1193,12 +1178,11 @@ async function doAuth() {
   btn.disabled = true;
   btn.textContent = _authTab === 'login' ? 'Entrando...' : 'Creando cuenta...';
   try {
-    const { signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile } = window._fb.auth;
     if (_authTab === 'login') {
-      await signInWithEmailAndPassword(window._fb.auth, email, password);
+      await window._auth.signInWithEmailAndPassword(email, password);
     } else {
-      const cred = await createUserWithEmailAndPassword(window._fb.auth, email, password);
-      await updateProfile(cred.user, { displayName: name });
+      const cred = await window._auth.createUserWithEmailAndPassword(email, password);
+      await cred.user.updateProfile({ displayName: name });
     }
   } catch(e) {
     const msgs = {
@@ -1216,9 +1200,9 @@ async function doAuth() {
   }
 }
 
-async function doSignOut() {
+async async function doSignOut() {
   if (!confirm('¿Cerrar sesión?')) return;
-  await window._fb.signOut(window._fb.auth);
+  await window._auth.signOut();
 }
 
 function toggleActivity() {
@@ -1533,10 +1517,9 @@ function loadCustomCompanies() {
 
 function saveCustomCompanies() {
   if (!_fbUser) return;
-  const { db, ref, set } = window._fb;
   const obj = {};
   customCompanies.forEach((c, i) => { obj['c' + i] = c; });
-  set(ref(db, 'customCompanies'), obj).catch(() => showToast('⚠ Error al guardar empresa'));
+  window._db.ref('customCompanies').set(obj).catch(() => showToast('⚠ Error al guardar empresa'));
 }
 
 function getAllData() {
@@ -1939,15 +1922,7 @@ renderMap = function() {
 };
 
 // ── BOOT: wire Firebase Auth ──────────────────────────────────────────────
-function waitForFb(cb, tries=0) {
-  if (window._fb) { cb(); }
-  else if (tries < 50) { setTimeout(() => waitForFb(cb, tries+1), 100); }
-  else { console.error('Firebase not loaded'); }
-}
-
-waitForFb(() => {
-  const { onAuthStateChanged } = window._fb;
-  onAuthStateChanged(window._fb.auth, (user) => {
+window._auth.onAuthStateChanged((user) => {
     if (user) {
       _fbUser = user;
       // Show app
@@ -1974,7 +1949,6 @@ waitForFb(() => {
       document.getElementById('activity-btn').style.display = 'none';
     }
   });
-});
 </script>
 
 <!-- ADD COMPANY MODAL -->
