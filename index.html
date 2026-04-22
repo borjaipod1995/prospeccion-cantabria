@@ -874,7 +874,7 @@ function render() {
       <td><span class="badge badge-${co.priority.toLowerCase()}">${co.priority}</span></td>
       <td onclick="event.stopPropagation()">
         <select class="status-select ${STATUS_CLASSES[st]}" onchange="updateStatus(${co.idx},this.value,this)">
-          ${STATUS_LABELS.map((l,j)=>`<option value="${j}"${j===st?' selected':''}>${l}</option>`).join('')}
+          ${STATUS_LABELS.map((l,j)=>'<option value="'+j+'"'+(j===st?' selected':'')+'>'+l+'</option>').join('')}
         </select>
       </td>
       <td onclick="event.stopPropagation()">
