@@ -303,21 +303,144 @@
   .route-collapsed .route-body { display:none; }
   .map-add-hint { font-size:11px;color:var(--gray-500);padding:4px 8px;text-align:center;border-top:1px solid var(--gray-200);background:var(--gray-100); }
 
+
+  /* AUTH SCREEN */
+  .auth-screen { position:fixed;inset:0;background:var(--navy);display:flex;align-items:center;justify-content:center;z-index:999;flex-direction:column;gap:0; }
+  .auth-card { background:white;border-radius:20px;padding:2.5rem;width:400px;max-width:92vw;box-shadow:0 24px 60px rgba(0,0,0,0.4); }
+  .auth-logo { text-align:center;margin-bottom:1.5rem; }
+  .auth-logo-box { width:56px;height:56px;background:var(--accent);border-radius:12px;display:inline-flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;color:white;margin-bottom:12px; }
+  .auth-title { font-size:20px;font-weight:600;color:var(--navy);text-align:center;margin-bottom:4px; }
+  .auth-sub { font-size:13px;color:var(--gray-500);text-align:center;margin-bottom:1.5rem; }
+  .auth-tabs { display:flex;gap:0;margin-bottom:1.5rem;border:1px solid var(--gray-200);border-radius:8px;overflow:hidden; }
+  .auth-tab { flex:1;padding:8px;text-align:center;font-size:13px;font-weight:500;cursor:pointer;background:white;border:none;color:var(--gray-500);transition:all 0.15s; }
+  .auth-tab.active { background:var(--navy);color:white; }
+  .auth-error { background:#fdecea;color:#8b1a1a;padding:10px 14px;border-radius:8px;font-size:13px;margin-bottom:12px;display:none; }
+  .auth-form { display:flex;flex-direction:column;gap:12px; }
+  .auth-input { padding:10px 14px;border:1px solid var(--gray-300);border-radius:10px;font-family:'DM Sans',sans-serif;font-size:14px;outline:none;transition:border-color 0.15s; }
+  .auth-input:focus { border-color:var(--blue); }
+  .auth-btn { padding:12px;background:var(--navy);color:white;border:none;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:background 0.15s; }
+  .auth-btn:hover { background:var(--blue); }
+  .auth-btn:disabled { background:var(--gray-300);cursor:not-allowed; }
+
+  /* ONLINE USERS */
+  .online-bar { display:flex;align-items:center;gap:6px;padding:0 1rem; }
+  .online-dot { width:7px;height:7px;border-radius:50%;background:#4ade80;box-shadow:0 0 6px #4ade80;flex-shrink:0; }
+  .online-label { font-size:11px;color:rgba(255,255,255,0.55); }
+  .online-avatars { display:flex;gap:-4px; }
+  .online-avatar { width:26px;height:26px;border-radius:50%;background:var(--accent);border:2px solid var(--navy);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:white;margin-left:-6px;cursor:default;position:relative; }
+  .online-avatar:first-child { margin-left:0; }
+  .online-avatar[title]:hover::after { content:attr(title);position:absolute;bottom:-24px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.8);color:white;font-size:10px;padding:2px 6px;border-radius:4px;white-space:nowrap;z-index:99; }
+
+  /* SYNC INDICATOR */
+  .sync-dot { width:8px;height:8px;border-radius:50%;background:#4ade80;display:inline-block;margin-right:4px; }
+  .sync-dot.syncing { background:#f59e0b;animation:pulse 0.8s infinite; }
+  .sync-dot.error { background:#ef4444; }
+  @keyframes pulse { 0%,100%{opacity:1}50%{opacity:0.3} }
+
+  /* USER CHIP in header */
+  .user-chip { display:flex;align-items:center;gap:8px;padding:4px 10px;background:rgba(255,255,255,0.1);border-radius:20px;cursor:pointer; }
+  .user-chip:hover { background:rgba(255,255,255,0.18); }
+  .user-chip-name { font-size:12px;color:rgba(255,255,255,0.85); }
+  .user-chip-logout { font-size:10px;color:rgba(255,255,255,0.5); }
+
+  /* ACTIVITY LOG */
+  .activity-panel { position:fixed;right:0;bottom:0;width:320px;background:white;border-top:1px solid var(--gray-200);border-left:1px solid var(--gray-200);border-radius:12px 0 0 0;box-shadow:var(--shadow-lg);z-index:150;max-height:300px;display:none;flex-direction:column; }
+  .activity-panel.open { display:flex; }
+  .activity-header { padding:10px 14px;background:var(--navy);display:flex;align-items:center;justify-content:space-between;border-radius:12px 0 0 0; }
+  .activity-header span { font-size:12px;font-weight:600;color:white; }
+  .activity-close { background:none;border:none;color:rgba(255,255,255,0.6);cursor:pointer;font-size:16px; }
+  .activity-list { overflow-y:auto;flex:1;padding:8px; }
+  .activity-item { padding:6px 8px;border-radius:6px;margin-bottom:4px;font-size:11px;color:var(--gray-700);background:var(--gray-100);line-height:1.5; }
+  .activity-item .act-user { font-weight:600;color:var(--navy); }
+  .activity-item .act-time { color:var(--gray-500);float:right; }
+  .activity-btn { position:fixed;right:1rem;bottom:1rem;background:var(--navy);color:white;border:none;border-radius:20px;padding:8px 16px;font-size:12px;cursor:pointer;z-index:149;box-shadow:var(--shadow); }
+  .activity-btn .act-badge { background:var(--accent);color:white;border-radius:10px;padding:1px 6px;font-size:10px;font-weight:700;margin-left:4px;display:none; }
+  .activity-btn .act-badge.show { display:inline; }
+
   /* Responsive col hide */
   @media (max-width: 1100px) { .col-potential { display: none; } }
   @media (max-width: 900px) { .col-activity { display: none; } }
   @media (max-width: 750px) { .sidebar { display: none; } }
 </style>
+<script type="module">
+// ── FIREBASE INIT (module scope, exposes to window) ──────────────────────
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword,
+         signOut, onAuthStateChanged, updateProfile }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getDatabase, ref, onValue, set, update, remove, push, serverTimestamp, onDisconnect }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyB9w_D-oGgGeCkttaZYmShACxIJ2zaLHN8",
+  authDomain: "laucirica-crm.firebaseapp.com",
+  databaseURL: "https://laucirica-crm-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "laucirica-crm",
+  storageBucket: "laucirica-crm.firebasestorage.app",
+  messagingSenderId: "430461844124",
+  appId: "1:430461844124:web:451c0823c37596ab5e0b59"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getDatabase(app);
+
+// Expose Firebase API to global scope for non-module scripts
+window._fb = { auth, db, ref, onValue, set, update, remove, push, serverTimestamp,
+               onDisconnect, signInWithEmailAndPassword, createUserWithEmailAndPassword,
+               signOut, onAuthStateChanged, updateProfile };
+</script>
+
 </head>
 <body>
 
-<div class="header">
+<!-- AUTH SCREEN -->
+<div class="auth-screen" id="auth-screen">
+  <div class="auth-card">
+    <div class="auth-logo">
+      <div class="auth-logo-box">LT</div>
+      <div class="auth-title">Laucirica CRM</div>
+      <div class="auth-sub">Prospección Cantabria · Equipo comercial</div>
+    </div>
+    <div class="auth-tabs">
+      <button class="auth-tab active" onclick="setAuthTab('login')">Entrar</button>
+      <button class="auth-tab" onclick="setAuthTab('register')">Nuevo usuario</button>
+    </div>
+    <div class="auth-error" id="auth-error"></div>
+    <div class="auth-form">
+      <input class="auth-input" id="auth-name" placeholder="Tu nombre (ej: Borja)" style="display:none" />
+      <input class="auth-input" id="auth-email" type="email" placeholder="Email" />
+      <input class="auth-input" id="auth-password" type="password" placeholder="Contraseña" />
+      <button class="auth-btn" id="auth-submit" onclick="doAuth()">Entrar</button>
+    </div>
+  </div>
+  <div style="color:rgba(255,255,255,0.3);font-size:11px;margin-top:1rem">Laucirica Transmisiones · Distribuidor BEST Gold Bonfiglioli</div>
+</div>
+
+<!-- ACTIVITY LOG -->
+<button class="activity-btn" id="activity-btn" onclick="toggleActivity()" style="display:none">
+  📋 Actividad <span class="act-badge" id="act-badge">0</span>
+</button>
+<div class="activity-panel" id="activity-panel">
+  <div class="activity-header">
+    <span>📋 Actividad reciente</span>
+    <button class="activity-close" onclick="toggleActivity()">✕</button>
+  </div>
+  <div class="activity-list" id="activity-list"></div>
+</div>
+
+<div class="header" style="display:none" id="main-header">
   <div class="header-brand">
     <div class="header-logo">LT</div>
     <div>
       <div class="header-title">Laucirica Transmisiones</div>
       <div class="header-sub">BEST Gold Bonfiglioli · Prospección Cantabria 2026 · <span id="save-indicator" style="color:rgba(255,255,255,0.4)">💾 guardado auto</span></div>
     </div>
+  </div>
+  <div class="online-bar">
+    <div class="online-dot"></div>
+    <span class="online-label">en línea:</span>
+    <div class="online-avatars" id="online-avatars"></div>
   </div>
   <div class="header-stats">
     <div class="hstat">
@@ -339,7 +462,15 @@
   </div>
 </div>
 
-<div class="layout">
+<div id="user-chip-wrap" style="position:fixed;top:12px;right:16px;z-index:200;display:none">
+  <div class="user-chip" onclick="doSignOut()">
+    <span class="sync-dot" id="sync-dot"></span>
+    <span class="user-chip-name" id="user-chip-name">—</span>
+    <span class="user-chip-logout">salir</span>
+  </div>
+</div>
+
+<div class="layout" style="display:none">
   <aside class="sidebar">
     <div class="sidebar-section">
       <div class="sidebar-label">Sectores</div>
@@ -766,11 +897,15 @@ function render() {
 }
 
 function updateStatus(idx, val, sel) {
-  statuses[idx] = parseInt(val);
-  sel.className = 'status-select ' + STATUS_CLASSES[parseInt(val)];
+  const v = parseInt(val);
+  statuses[idx] = v;
+  sel.className = 'status-select ' + STATUS_CLASSES[v];
   updateStats();
   if (currentStatusFilter !== 'all') render();
   saveToStorage();
+  const allData = getAllData();
+  const co = allData.find(x => x.idx === idx);
+  if (co && v > 0) logActivity('Cambió estado a ' + STATUS_LABELS[v].replace(/[^\w ]/g,'').trim(), co.name);
 }
 
 function updateNote(idx, val) {
@@ -904,33 +1039,195 @@ function showToast(msg) {
   setTimeout(() => t.classList.remove('show'), 2500);
 }
 
+// ── FIREBASE SYNC ─────────────────────────────────────────────────────────
+let _fbUser = null;
+let _syncDebounce = null;
+let _listening = false;
+let _actCount = 0;
+
+function setSyncDot(state) {
+  const d = document.getElementById('sync-dot');
+  if (!d) return;
+  d.className = 'sync-dot' + (state === 'syncing' ? ' syncing' : state === 'error' ? ' error' : '');
+}
+
 function saveToStorage() {
-  try {
-    localStorage.setItem('crm_cantabria_v2', JSON.stringify({ statuses, notes, saved: new Date().toISOString() }));
-    const ind = document.getElementById('save-indicator');
-    if (ind) { ind.textContent = '💾 guardado ' + new Date().toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'}); }
-  } catch(e) { showToast('⚠ No se pudo guardar (almacenamiento lleno)'); }
+  if (!_fbUser) return;
+  setSyncDot('syncing');
+  clearTimeout(_syncDebounce);
+  _syncDebounce = setTimeout(() => {
+    const { db, ref, update, serverTimestamp } = window._fb;
+    update(ref(db, 'crm'), {
+      statuses: Object.fromEntries(Object.entries(statuses).map(([k,v]) => [k, v])),
+      notes: Object.fromEntries(Object.entries(notes).map(([k,v]) => [k, v])),
+      lastUpdated: serverTimestamp(),
+      lastUpdatedBy: _fbUser.displayName || _fbUser.email,
+    }).then(() => {
+      setSyncDot('ok');
+      const ind = document.getElementById('save-indicator');
+      if (ind) ind.textContent = '☁️ sincronizado ' + new Date().toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'});
+    }).catch(() => setSyncDot('error'));
+  }, 600);
 }
 
 function loadFromStorage() {
-  try {
-    const raw = localStorage.getItem('crm_cantabria_v2') || localStorage.getItem('crm_cantabria');
-    if (raw) {
-      const d = JSON.parse(raw);
-      Object.assign(statuses, d.statuses || {});
-      Object.assign(notes, d.notes || {});
-    }
-  } catch(e) {}
+  // No-op: data comes from Firebase listener set up after auth
+}
+
+function startFirebaseListeners() {
+  if (_listening) return;
+  _listening = true;
+  const { db, ref, onValue } = window._fb;
+
+  // Main data listener — real-time sync
+  onValue(ref(db, 'crm'), (snap) => {
+    const data = snap.val() || {};
+    const remoteStatuses = data.statuses || {};
+    const remoteNotes = data.notes || {};
+    // Merge remote into local state
+    Object.keys(statuses).forEach(k => delete statuses[k]);
+    Object.keys(notes).forEach(k => delete notes[k]);
+    Object.assign(statuses, remoteStatuses);
+    Object.assign(notes, remoteNotes);
+    render();
+    setSyncDot('ok');
+    const ind = document.getElementById('save-indicator');
+    if (ind) ind.textContent = '☁️ en vivo';
+  });
+
+  // Custom companies listener
+  onValue(ref(db, 'customCompanies'), (snap) => {
+    customCompanies = snap.val() ? Object.values(snap.val()) : [];
+    render();
+  });
+
+  // Activity log listener
+  onValue(ref(db, 'activity'), (snap) => {
+    const acts = snap.val() ? Object.values(snap.val()).reverse().slice(0,30) : [];
+    renderActivity(acts);
+  });
+
+  // Online presence listener
+  onValue(ref(db, 'presence'), (snap) => {
+    const presence = snap.val() || {};
+    renderOnlineUsers(Object.values(presence));
+  });
+}
+
+function logActivity(action, companyName) {
+  if (!_fbUser) return;
+  const { db, ref, push, serverTimestamp } = window._fb;
+  push(ref(db, 'activity'), {
+    user: _fbUser.displayName || _fbUser.email.split('@')[0],
+    action, company: companyName,
+    ts: Date.now(),
+  });
+}
+
+function renderActivity(acts) {
+  const list = document.getElementById('activity-list');
+  if (!list) return;
+  const newCount = acts.filter(a => a.ts > (window._lastActTs || 0)).length;
+  window._lastActTs = acts[0] ? acts[0].ts : 0;
+  if (newCount > 0 && _actCount > 0) {
+    const badge = document.getElementById('act-badge');
+    if (badge) { badge.textContent = newCount; badge.classList.add('show'); }
+  }
+  _actCount++;
+  list.innerHTML = acts.map(a => {
+    const t = new Date(a.ts).toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'});
+    return `<div class="activity-item">
+      <span class="act-user">${a.user}</span>
+      <span class="act-time">${t}</span><br>
+      ${a.action}${a.company ? ' · <em>' + a.company + '</em>' : ''}
+    </div>`;
+  }).join('') || '<div style="font-size:12px;color:var(--gray-500);padding:8px">Sin actividad reciente</div>';
+}
+
+function renderOnlineUsers(users) {
+  const wrap = document.getElementById('online-avatars');
+  if (!wrap) return;
+  wrap.innerHTML = users.map(u => {
+    const initials = (u.name || '?').split(' ').map(w => w[0]).join('').toUpperCase().slice(0,2);
+    const colors = ['#e07b2a','#1e5fa8','#1a7a4a','#8b1a1a','#4a1a8b','#0f6e56'];
+    const color = colors[initials.charCodeAt(0) % colors.length];
+    return `<div class="online-avatar" title="${u.name}" style="background:${color}">${initials}</div>`;
+  }).join('');
+}
+
+function setupPresence() {
+  if (!_fbUser) return;
+  const { db, ref, set, onDisconnect, serverTimestamp } = window._fb;
+  const uid = _fbUser.uid;
+  const presRef = ref(db, 'presence/' + uid);
+  set(presRef, { name: _fbUser.displayName || _fbUser.email.split('@')[0], ts: Date.now() });
+  onDisconnect(presRef).remove();
 }
 
 function resetData() {
-  if (!confirm('¿Seguro que quieres borrar todos los estados y notas? Esta acción no se puede deshacer.')) return;
-  Object.keys(statuses).forEach(k => delete statuses[k]);
-  Object.keys(notes).forEach(k => delete notes[k]);
-  localStorage.removeItem('crm_cantabria_v2');
-  localStorage.removeItem('crm_cantabria');
-  render();
-  showToast('Datos reiniciados ✓');
+  if (!confirm('¿Seguro? Esto borra TODOS los estados y notas para todo el equipo.')) return;
+  const { db, ref, set } = window._fb;
+  set(ref(db, 'crm'), { statuses: {}, notes: {}, lastUpdated: Date.now(), lastUpdatedBy: _fbUser?.displayName || '?' })
+    .then(() => { showToast('Datos reiniciados para todo el equipo ✓'); logActivity('Reinició todos los datos'); });
+}
+
+// ── AUTH FUNCTIONS ─────────────────────────────────────────────────────────
+let _authTab = 'login';
+
+function setAuthTab(tab) {
+  _authTab = tab;
+  document.querySelectorAll('.auth-tab').forEach((b,i) => b.classList.toggle('active', (i===0 && tab==='login') || (i===1 && tab==='register')));
+  document.getElementById('auth-name').style.display = tab === 'register' ? '' : 'none';
+  document.getElementById('auth-submit').textContent = tab === 'login' ? 'Entrar' : 'Crear cuenta';
+  document.getElementById('auth-error').style.display = 'none';
+}
+
+async function doAuth() {
+  const email = document.getElementById('auth-email').value.trim();
+  const password = document.getElementById('auth-password').value;
+  const name = document.getElementById('auth-name').value.trim();
+  const btn = document.getElementById('auth-submit');
+  const errEl = document.getElementById('auth-error');
+  if (!email || !password) { errEl.textContent = 'Email y contraseña son obligatorios'; errEl.style.display = ''; return; }
+  if (_authTab === 'register' && !name) { errEl.textContent = 'Introduce tu nombre'; errEl.style.display = ''; return; }
+  btn.disabled = true;
+  btn.textContent = _authTab === 'login' ? 'Entrando...' : 'Creando cuenta...';
+  try {
+    const { signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile } = window._fb.auth;
+    if (_authTab === 'login') {
+      await signInWithEmailAndPassword(window._fb.auth, email, password);
+    } else {
+      const cred = await createUserWithEmailAndPassword(window._fb.auth, email, password);
+      await updateProfile(cred.user, { displayName: name });
+    }
+  } catch(e) {
+    const msgs = {
+      'auth/user-not-found': 'Usuario no encontrado',
+      'auth/wrong-password': 'Contraseña incorrecta',
+      'auth/email-already-in-use': 'Email ya registrado — prueba a entrar',
+      'auth/weak-password': 'Contraseña demasiado corta (mín. 6 caracteres)',
+      'auth/invalid-email': 'Email no válido',
+      'auth/invalid-credential': 'Email o contraseña incorrectos',
+    };
+    errEl.textContent = msgs[e.code] || ('Error: ' + e.message);
+    errEl.style.display = '';
+    btn.disabled = false;
+    btn.textContent = _authTab === 'login' ? 'Entrar' : 'Crear cuenta';
+  }
+}
+
+async function doSignOut() {
+  if (!confirm('¿Cerrar sesión?')) return;
+  await window._fb.signOut(window._fb.auth);
+}
+
+function toggleActivity() {
+  const panel = document.getElementById('activity-panel');
+  panel.classList.toggle('open');
+  if (panel.classList.contains('open')) {
+    const badge = document.getElementById('act-badge');
+    if (badge) badge.classList.remove('show');
+  }
 }
 
 
@@ -1231,16 +1528,15 @@ let customCompanies = [];    // [{sector,name,location,activity,potential,priori
 let editingCustomIdx = null; // null = add new, number = editing
 
 function loadCustomCompanies() {
-  try {
-    const raw = localStorage.getItem('crm_custom_companies');
-    if (raw) customCompanies = JSON.parse(raw);
-  } catch(e) { customCompanies = []; }
+  // Loaded via Firebase listener in startFirebaseListeners()
 }
 
 function saveCustomCompanies() {
-  try {
-    localStorage.setItem('crm_custom_companies', JSON.stringify(customCompanies));
-  } catch(e) { showToast('⚠ No se pudieron guardar las empresas personalizadas'); }
+  if (!_fbUser) return;
+  const { db, ref, set } = window._fb;
+  const obj = {};
+  customCompanies.forEach((c, i) => { obj['c' + i] = c; });
+  set(ref(db, 'customCompanies'), obj).catch(() => showToast('⚠ Error al guardar empresa'));
 }
 
 function getAllData() {
@@ -1386,6 +1682,7 @@ function saveNewCompany() {
     const newIdx = 10000 + customCompanies.length - 1;
     if (noteVal) notes[newIdx] = noteVal;
     showToast('Empresa añadida ✓');
+    logActivity('Añadió nueva empresa', company.name);
   }
   saveCustomCompanies();
   saveToStorage();
@@ -1641,9 +1938,43 @@ renderMap = function() {
   if (rp) rp.style.display = '';
 };
 
-loadCustomCompanies();
-loadFromStorage();
-render();
+// ── BOOT: wire Firebase Auth ──────────────────────────────────────────────
+function waitForFb(cb, tries=0) {
+  if (window._fb) { cb(); }
+  else if (tries < 50) { setTimeout(() => waitForFb(cb, tries+1), 100); }
+  else { console.error('Firebase not loaded'); }
+}
+
+waitForFb(() => {
+  const { onAuthStateChanged } = window._fb;
+  onAuthStateChanged(window._fb.auth, (user) => {
+    if (user) {
+      _fbUser = user;
+      // Show app
+      document.getElementById('auth-screen').style.display = 'none';
+      document.getElementById('main-header').style.display = '';
+      document.querySelector('.layout').style.display = '';
+      document.getElementById('user-chip-wrap').style.display = '';
+      document.getElementById('activity-btn').style.display = '';
+      // Set user chip
+      const uname = user.displayName || user.email.split('@')[0];
+      document.getElementById('user-chip-name').textContent = uname;
+      setupPresence();
+      startFirebaseListeners();
+      logActivity('Se conectó');
+      render();
+    } else {
+      _fbUser = null;
+      _listening = false;
+      // Show auth screen
+      document.getElementById('auth-screen').style.display = 'flex';
+      document.getElementById('main-header').style.display = 'none';
+      if (document.querySelector('.layout')) document.querySelector('.layout').style.display = 'none';
+      document.getElementById('user-chip-wrap').style.display = 'none';
+      document.getElementById('activity-btn').style.display = 'none';
+    }
+  });
+});
 </script>
 
 <!-- ADD COMPANY MODAL -->
