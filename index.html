@@ -252,6 +252,57 @@
   .popup-activity { font-size:12px; color:#444; margin-bottom:6px; line-height:1.5; }
   .popup-btn { display:inline-block; padding:5px 12px; background:#0f1e3c; color:white; border-radius:6px; font-size:11px; font-weight:500; cursor:pointer; border:none; margin-top:4px; }
 
+
+  /* ADD COMPANY MODAL */
+  .modal-overlay { position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:300;display:none;align-items:center;justify-content:center; }
+  .modal-overlay.open { display:flex; }
+  .modal { background:white;border-radius:16px;width:560px;max-width:95vw;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 24px 60px rgba(0,0,0,0.25); }
+  .modal-header { background:var(--navy);padding:1.25rem 1.5rem;display:flex;align-items:center;justify-content:space-between; }
+  .modal-header h3 { color:white;font-size:16px;font-weight:600; }
+  .modal-close { background:none;border:none;color:rgba(255,255,255,0.6);font-size:20px;cursor:pointer; }
+  .modal-body { padding:1.5rem;overflow-y:auto;flex:1; }
+  .modal-footer { padding:1rem 1.5rem;border-top:1px solid var(--gray-200);display:flex;gap:10px;justify-content:flex-end; }
+  .form-row { display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px; }
+  .form-row.full { grid-template-columns:1fr; }
+  .form-group { display:flex;flex-direction:column;gap:4px; }
+  .form-label { font-size:11px;font-weight:600;color:var(--gray-500);text-transform:uppercase;letter-spacing:0.06em; }
+  .form-input { padding:8px 12px;border:1px solid var(--gray-300);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--gray-900);outline:none;transition:border-color 0.15s; }
+  .form-input:focus { border-color:var(--blue); }
+  .form-select { padding:8px 12px;border:1px solid var(--gray-300);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;background:white;cursor:pointer;outline:none; }
+  .form-select:focus { border-color:var(--blue); }
+  .form-textarea { padding:8px 12px;border:1px solid var(--gray-300);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:13px;resize:vertical;outline:none;transition:border-color 0.15s; }
+  .form-textarea:focus { border-color:var(--blue); }
+  .geocode-row { display:flex;gap:8px;align-items:flex-end; }
+  .geocode-btn { padding:8px 14px;background:var(--blue);color:white;border:none;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;cursor:pointer;white-space:nowrap; }
+  .geocode-btn:hover { background:var(--navy); }
+  .geocode-status { font-size:11px;color:var(--gray-500);margin-top:4px; }
+  .custom-badge { display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:12px;font-size:10px;font-weight:600;background:#e8edf7;color:#1e5fa8; }
+
+  /* ROUTE OPTIMIZER */
+  .route-panel { position:absolute;top:12px;left:12px;z-index:1000;background:white;border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,0.15);width:300px;max-height:calc(100% - 24px);overflow:hidden;display:flex;flex-direction:column; }
+  .route-header { background:var(--navy);padding:12px 14px;display:flex;align-items:center;justify-content:space-between; }
+  .route-header h4 { color:white;font-size:13px;font-weight:600; }
+  .route-toggle { background:none;border:none;color:rgba(255,255,255,0.7);cursor:pointer;font-size:18px;line-height:1; }
+  .route-body { padding:12px;overflow-y:auto;flex:1; }
+  .route-hint { font-size:11px;color:var(--gray-500);margin-bottom:10px;line-height:1.5; }
+  .route-list { list-style:none;margin-bottom:10px; }
+  .route-item { display:flex;align-items:center;gap:8px;padding:6px 8px;background:var(--gray-100);border-radius:6px;margin-bottom:4px;font-size:12px; }
+  .route-num { width:20px;height:20px;border-radius:50%;background:var(--navy);color:white;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0; }
+  .route-name { flex:1;font-weight:500;color:var(--gray-900);white-space:nowrap;overflow:hidden;text-overflow:ellipsis; }
+  .route-remove { background:none;border:none;color:var(--gray-500);cursor:pointer;font-size:14px;padding:0 4px; }
+  .route-remove:hover { color:var(--red); }
+  .route-actions { display:flex;flex-direction:column;gap:6px; }
+  .route-btn { padding:8px;border:none;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;cursor:pointer;text-align:center; }
+  .route-btn-primary { background:var(--accent);color:white; }
+  .route-btn-primary:hover { background:#c96b1a; }
+  .route-btn-secondary { background:var(--gray-200);color:var(--gray-700); }
+  .route-btn-secondary:hover { background:var(--gray-300); }
+  .route-btn-maps { background:#1a7a4a;color:white; }
+  .route-btn-maps:hover { background:#145e38; }
+  .route-result { margin-top:8px;padding:8px;background:#edf4ff;border-radius:6px;font-size:11px;color:var(--blue); }
+  .route-collapsed .route-body { display:none; }
+  .map-add-hint { font-size:11px;color:var(--gray-500);padding:4px 8px;text-align:center;border-top:1px solid var(--gray-200);background:var(--gray-100); }
+
   /* Responsive col hide */
   @media (max-width: 1100px) { .col-potential { display: none; } }
   @media (max-width: 900px) { .col-activity { display: none; } }
@@ -367,6 +418,7 @@
         <button class="view-btn" id="btn-map-view" onclick="setView('map')">🗺 Mapa</button>
       </div>
       <span class="result-count" id="result-count">156 resultados</span>
+      <button class="export-btn" style="background:var(--green)" onclick="openAddModal()">＋ Añadir empresa</button>
       <button class="export-btn" onclick="exportCSV()">⬇ Exportar CSV</button>
       <button class="export-btn" style="background:var(--gray-500)" onclick="resetData()" title="Borrar todos los estados y notas">🗑 Reset</button>
     </div>
@@ -1173,8 +1225,541 @@ function renderMap() {
   }
 }
 
+
+// ── CUSTOM COMPANIES ──────────────────────────────────────────────────────
+let customCompanies = [];    // [{sector,name,location,activity,potential,priority,contact,lat,lng}]
+let editingCustomIdx = null; // null = add new, number = editing
+
+function loadCustomCompanies() {
+  try {
+    const raw = localStorage.getItem('crm_custom_companies');
+    if (raw) customCompanies = JSON.parse(raw);
+  } catch(e) { customCompanies = []; }
+}
+
+function saveCustomCompanies() {
+  try {
+    localStorage.setItem('crm_custom_companies', JSON.stringify(customCompanies));
+  } catch(e) { showToast('⚠ No se pudieron guardar las empresas personalizadas'); }
+}
+
+function getAllData() {
+  // Merge RAW + custom into unified format
+  const raw = RAW.map((r, i) => ({
+    idx: i, isCustom: false, sector: r[0], name: r[1], location: r[2],
+    activity: r[3], potential: r[4], priority: r[5], contact: r[6]
+  }));
+  const custom = customCompanies.map((c, i) => ({
+    idx: 10000 + i, isCustom: true, sector: c.sector, name: c.name,
+    location: c.location, activity: c.activity, potential: c.potential,
+    priority: c.priority, contact: c.contact
+  }));
+  return [...raw, ...custom];
+}
+
+function getCoord(item) {
+  if (item.isCustom) {
+    const c = customCompanies[item.idx - 10000];
+    return c && c.lat && c.lng ? [c.lat, c.lng] : null;
+  }
+  return COORDS[item.idx] || null;
+}
+
+// Patch getData() to use getAllData()
+function getData() {
+  let d = getAllData();
+  if (currentSector !== 'all') d = d.filter(x => x.sector === currentSector);
+  if (currentPriority !== 'all') d = d.filter(x => x.priority === currentPriority);
+  if (currentStatusFilter !== 'all') d = d.filter(x => String(statuses[x.idx] || 0) === currentStatusFilter);
+  const q = document.getElementById('search').value.trim().toLowerCase();
+  if (q) d = d.filter(x => (x.name+x.location+x.activity+(x.potential||'')+(x.contact||'')).toLowerCase().includes(q));
+  if (sortField) d.sort((a,b) => {
+    const va = a[sortField]||'', vb = b[sortField]||'';
+    return sortAsc ? va.localeCompare(vb) : vb.localeCompare(va);
+  });
+  return d;
+}
+
+function updateStats() {
+  const all = getAllData();
+  const alta = all.filter(x => x.priority === 'ALTA').length;
+  const contacted = Object.values(statuses).filter(v => v > 0).length;
+  const pct = Math.round(contacted / all.length * 100);
+  document.getElementById('hstat-total').textContent = all.length;
+  document.getElementById('hstat-alta').textContent = alta;
+  document.getElementById('hstat-contactadas').textContent = contacted;
+  document.getElementById('hstat-pct').textContent = pct + '%';
+  document.getElementById('progress-txt').textContent = `${contacted} de ${all.length} contactadas`;
+  document.getElementById('progress-bar').style.width = pct + '%';
+  const sectors = ['all','auto','quim','alim','meta','dist'];
+  sectors.forEach(s => {
+    const cnt = s === 'all' ? all.length : all.filter(x => x.sector===s).length;
+    const el = document.getElementById('cnt-'+s);
+    if (el) el.textContent = cnt;
+  });
+}
+
+// ── ADD MODAL ─────────────────────────────────────────────────────────────
+function openAddModal(customIdx) {
+  editingCustomIdx = (customIdx !== undefined) ? customIdx : null;
+  document.getElementById('modal-title').textContent = editingCustomIdx !== null ? '✏️ Editar empresa' : '➕ Añadir nueva empresa';
+  if (editingCustomIdx !== null) {
+    const c = customCompanies[editingCustomIdx];
+    document.getElementById('f-name').value = c.name || '';
+    document.getElementById('f-sector').value = c.sector || 'auto';
+    document.getElementById('f-province').value = c.province || '';
+    document.getElementById('f-location').value = c.location || '';
+    document.getElementById('f-address').value = c.address || '';
+    document.getElementById('f-lat').value = c.lat || '';
+    document.getElementById('f-lng').value = c.lng || '';
+    document.getElementById('f-activity').value = c.activity || '';
+    document.getElementById('f-potential').value = c.potential || '';
+    document.getElementById('f-priority').value = c.priority || 'MEDIA';
+    document.getElementById('f-contact').value = c.contact || '';
+    document.getElementById('f-notes').value = notes[10000+editingCustomIdx] || '';
+  } else {
+    ['f-name','f-province','f-location','f-address','f-lat','f-lng','f-activity','f-potential','f-contact','f-notes'].forEach(id => {
+      document.getElementById(id).value = '';
+    });
+    document.getElementById('f-sector').value = 'auto';
+    document.getElementById('f-priority').value = 'MEDIA';
+  }
+  document.getElementById('geocode-status').textContent = 'Introduce la dirección y pulsa Ubicar para colocarla en el mapa';
+  document.getElementById('add-modal-overlay').classList.add('open');
+}
+
+function closeAddModal(e) {
+  if (e && e.target !== document.getElementById('add-modal-overlay')) return;
+  document.getElementById('add-modal-overlay').classList.remove('open');
+  editingCustomIdx = null;
+}
+
+function clearGeocode() {
+  document.getElementById('geocode-status').textContent = 'Introduce la dirección y pulsa Ubicar para colocarla en el mapa';
+}
+
+async function geocodeAddress() {
+  const addr = document.getElementById('f-address').value.trim();
+  const loc = document.getElementById('f-location').value.trim();
+  const query = addr || loc;
+  if (!query) { showToast('Escribe una dirección primero'); return; }
+  document.getElementById('geocode-status').textContent = '🔍 Buscando...';
+  try {
+    const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query + ', España')}&format=json&limit=1`;
+    const res = await fetch(url, { headers: { 'Accept-Language': 'es' } });
+    const data = await res.json();
+    if (data && data.length > 0) {
+      const { lat, lon, display_name } = data[0];
+      document.getElementById('f-lat').value = parseFloat(lat).toFixed(4);
+      document.getElementById('f-lng').value = parseFloat(lon).toFixed(4);
+      document.getElementById('geocode-status').textContent = '✅ Ubicado: ' + display_name.split(',').slice(0,3).join(',');
+    } else {
+      document.getElementById('geocode-status').textContent = '⚠ No encontrado. Puedes introducir lat/lng manualmente.';
+    }
+  } catch(e) {
+    document.getElementById('geocode-status').textContent = '⚠ Error de red. Introduce lat/lng manualmente.';
+  }
+}
+
+function saveNewCompany() {
+  const name = document.getElementById('f-name').value.trim();
+  const location = document.getElementById('f-location').value.trim();
+  const activity = document.getElementById('f-activity').value.trim();
+  if (!name || !location || !activity) { showToast('⚠ Nombre, localidad y actividad son obligatorios'); return; }
+  const company = {
+    sector: document.getElementById('f-sector').value,
+    name, province: document.getElementById('f-province').value.trim(),
+    location, address: document.getElementById('f-address').value.trim(),
+    lat: parseFloat(document.getElementById('f-lat').value) || null,
+    lng: parseFloat(document.getElementById('f-lng').value) || null,
+    activity, potential: document.getElementById('f-potential').value.trim(),
+    priority: document.getElementById('f-priority').value,
+    contact: document.getElementById('f-contact').value.trim(),
+  };
+  const noteVal = document.getElementById('f-notes').value.trim();
+  if (editingCustomIdx !== null) {
+    customCompanies[editingCustomIdx] = company;
+    if (noteVal) notes[10000 + editingCustomIdx] = noteVal;
+    showToast('Empresa actualizada ✓');
+  } else {
+    customCompanies.push(company);
+    const newIdx = 10000 + customCompanies.length - 1;
+    if (noteVal) notes[newIdx] = noteVal;
+    showToast('Empresa añadida ✓');
+  }
+  saveCustomCompanies();
+  saveToStorage();
+  document.getElementById('add-modal-overlay').classList.remove('open');
+  editingCustomIdx = null;
+  render();
+}
+
+function deleteCustomCompany(customIdx) {
+  if (!confirm('¿Eliminar esta empresa?')) return;
+  customCompanies.splice(customIdx, 1);
+  saveCustomCompanies();
+  render();
+  showToast('Empresa eliminada');
+}
+
+// ── ROUTE OPTIMIZER ───────────────────────────────────────────────────────
+let routeStops = []; // [{idx, name, lat, lng}]
+let routeLine = null;
+
+function toggleRoutePanel() {
+  const panel = document.getElementById('route-panel');
+  const btn = document.getElementById('route-toggle-btn');
+  panel.classList.toggle('route-collapsed');
+  btn.textContent = panel.classList.contains('route-collapsed') ? '+' : '−';
+}
+
+function addToRoute(item, coord) {
+  if (routeStops.find(s => s.idx === item.idx)) { showToast('Ya está en la ruta'); return; }
+  if (routeStops.length >= 10) { showToast('Máximo 10 paradas por ruta'); return; }
+  routeStops.push({ idx: item.idx, name: item.name, lat: coord[0], lng: coord[1] });
+  renderRouteList();
+  showToast('➕ ' + item.name + ' añadido a la ruta');
+}
+
+function removeFromRoute(idx) {
+  routeStops = routeStops.filter(s => s.idx !== idx);
+  renderRouteList();
+  drawRouteLine();
+}
+
+function renderRouteList() {
+  const ul = document.getElementById('route-list');
+  if (routeStops.length === 0) {
+    ul.innerHTML = '<li style="font-size:12px;color:var(--gray-500);padding:6px;text-align:center">Sin paradas aún</li>';
+    return;
+  }
+  ul.innerHTML = routeStops.map((s, i) => `
+    <li class="route-item">
+      <span class="route-num">${i+1}</span>
+      <span class="route-name" title="${s.name}">${s.name}</span>
+      <button class="route-remove" onclick="removeFromRoute(${s.idx})" title="Eliminar">✕</button>
+    </li>`).join('');
+}
+
+// Nearest-neighbor TSP heuristic
+function optimizeRoute() {
+  if (routeStops.length < 3) { showToast('Añade al menos 3 paradas para optimizar'); return; }
+  const stops = [...routeStops];
+  const visited = new Array(stops.length).fill(false);
+  const result = [stops[0]];
+  visited[0] = true;
+  for (let i = 1; i < stops.length; i++) {
+    const last = result[result.length - 1];
+    let bestIdx = -1, bestDist = Infinity;
+    stops.forEach((s, j) => {
+      if (!visited[j]) {
+        const d = Math.hypot(s.lat - last.lat, s.lng - last.lng);
+        if (d < bestDist) { bestDist = d; bestIdx = j; }
+      }
+    });
+    visited[bestIdx] = true;
+    result.push(stops[bestIdx]);
+  }
+  routeStops = result;
+  renderRouteList();
+  drawRouteLine();
+  const res = document.getElementById('route-result');
+  res.style.display = '';
+  res.textContent = `✅ Ruta optimizada: ${routeStops.length} paradas en orden eficiente`;
+  showToast('Ruta optimizada ✓');
+}
+
+function drawRouteLine() {
+  if (routeLine) { leafletMap.removeLayer(routeLine); routeLine = null; }
+  if (routeStops.length < 2) return;
+  const latlngs = routeStops.map(s => [s.lat, s.lng]);
+  routeLine = L.polyline(latlngs, { color: '#e07b2a', weight: 3, dashArray: '8,6', opacity: 0.85 }).addTo(leafletMap);
+  leafletMap.fitBounds(routeLine.getBounds().pad(0.15));
+}
+
+function clearRoute() {
+  routeStops = [];
+  renderRouteList();
+  if (routeLine) { leafletMap.removeLayer(routeLine); routeLine = null; }
+  document.getElementById('route-result').style.display = 'none';
+}
+
+function openInGoogleMaps() {
+  if (routeStops.length < 2) { showToast('Añade al menos 2 paradas'); return; }
+  const origin = routeStops[0];
+  const dest = routeStops[routeStops.length - 1];
+  const waypoints = routeStops.slice(1, -1).map(s => s.lat + ',' + s.lng).join('|');
+  let url = `https://www.google.com/maps/dir/${origin.lat},${origin.lng}/`;
+  if (waypoints) url += `${waypoints}/`;
+  url += `${dest.lat},${dest.lng}`;
+  window.open(url, '_blank');
+}
+
+// ── PATCH renderMap to add right-click + route panel ──────────────────────
+const _origRenderMap = renderMap;
+renderMap = function() {
+  _origRenderMap();
+  // Show route panel when in map view
+  const rp = document.getElementById('route-panel');
+  if (rp) rp.style.display = '';
+
+  // Re-attach right-click to all markers
+  mapMarkers.forEach((marker, i) => {
+    const data = getData();
+    const co = data[i];
+    if (!co) return;
+    const coord = getCoord(co);
+    if (!coord) return;
+    marker.on('contextmenu', (e) => {
+      L.DomEvent.stopPropagation(e);
+      addToRoute(co, coord);
+    });
+  });
+};
+
+// Patch setView to hide route panel in table view
+const _origSetView = setView;
+setView = function(v) {
+  _origSetView(v);
+  const rp = document.getElementById('route-panel');
+  if (rp) rp.style.display = v === 'map' ? '' : 'none';
+};
+
+// ── PATCH openDrawer to handle custom companies ────────────────────────────
+const _origOpenDrawer = openDrawer;
+openDrawer = function(idx) {
+  if (idx >= 10000) {
+    const ci = idx - 10000;
+    const co = customCompanies[ci];
+    if (!co) return;
+    const s = SECTORS[co.sector] || SECTORS['auto'];
+    document.getElementById('d-sector').textContent = s.label + ' · ✏ Empresa personalizada';
+    document.getElementById('d-name').textContent = co.name;
+    document.getElementById('d-location').textContent = '📍 ' + co.location + (co.province ? ' · ' + co.province : '');
+    document.getElementById('d-activity').textContent = co.activity;
+    document.getElementById('d-potential').textContent = co.potential || '—';
+    document.getElementById('d-contact').textContent = co.contact || '—';
+    document.getElementById('d-status').value = statuses[idx] || 0;
+    document.getElementById('d-notes').value = notes[idx] || '';
+    document.getElementById('d-pitch').textContent = PITCHES[co.sector] || '';
+    currentDrawerIdx = idx;
+    // Add edit/delete buttons
+    const footer = document.querySelector('.drawer-footer');
+    const existing = document.getElementById('custom-edit-btns');
+    if (existing) existing.remove();
+    const editDiv = document.createElement('div');
+    editDiv.id = 'custom-edit-btns';
+    editDiv.style.cssText = 'display:flex;gap:6px;margin-right:auto';
+    editDiv.innerHTML = `<button class="btn-primary" style="background:var(--blue);flex:0;padding:10px 12px;font-size:12px" onclick="openAddModal(${ci})">✏ Editar</button>
+      <button class="btn-primary" style="background:var(--red);flex:0;padding:10px 12px;font-size:12px" onclick="deleteCustomCompany(${ci});closeDrawer()">🗑</button>`;
+    footer.insertBefore(editDiv, footer.firstChild);
+    document.getElementById('overlay').classList.add('open');
+    document.getElementById('drawer').classList.add('open');
+  } else {
+    // Remove custom edit buttons if present
+    const existing = document.getElementById('custom-edit-btns');
+    if (existing) existing.remove();
+    _origOpenDrawer(idx);
+  }
+};
+
+// ── PATCH renderMap to handle custom companies ─────────────────────────────
+const _origRenderMap2 = renderMap;
+renderMap = function() {
+  if (!leafletMap) return;
+  mapMarkers.forEach(m => leafletMap.removeLayer(m));
+  mapMarkers = [];
+
+  const data = getData();
+  const mapList = document.getElementById('map-list');
+  document.getElementById('map-count').textContent = data.length;
+  mapList.innerHTML = '';
+
+  data.forEach((co, i) => {
+    const coord = getCoord(co);
+    if (!coord) return;
+    const [lat, lng] = coord;
+    const st = statuses[co.idx] || 0;
+    const s = SECTORS[co.sector] || SECTORS['auto'];
+    const icon = makeMarkerIcon(co.sector, co.priority, st);
+
+    const customTag = co.isCustom ? '<span style="font-size:10px;background:#e8f4ea;color:#1a7a4a;padding:1px 6px;border-radius:10px;font-weight:600">CUSTOM</span>' : '';
+    const marker = L.marker([lat, lng], { icon })
+      .addTo(leafletMap)
+      .bindPopup(`
+        <div class="popup-name">${co.name} ${customTag}</div>
+        <div class="popup-loc">📍 ${co.location}</div>
+        <span class="badge badge-${co.priority.toLowerCase()}">${co.priority}</span>
+        <div class="popup-activity" style="margin-top:6px">${co.activity}</div>
+        ${co.potential ? '<div style="margin-top:6px;font-size:11px;color:#1e5fa8"><strong>Potencial:</strong> ' + co.potential + '</div>' : ''}
+        ${co.contact ? '<div style="margin-top:4px;font-size:11px;color:#666"><strong>Contacto:</strong> ' + co.contact + '</div>' : ''}
+        <div style="margin-top:8px;display:flex;gap:6px">
+          <button class="popup-btn" onclick="openDrawer(${co.idx})">Ver ficha</button>
+          <button class="popup-btn" style="background:var(--accent)" onclick="addToRoute({idx:${co.idx},name:'${co.name.replace(/'/g,"\'")}'},[${lat},${lng}])">+ Ruta</button>
+        </div>
+      `, { maxWidth: 280 });
+
+    marker.on('click', () => {
+      document.querySelectorAll('.map-co-item').forEach(el => el.classList.remove('highlighted'));
+      const item = document.getElementById('mapitem-' + co.idx);
+      if (item) { item.classList.add('highlighted'); item.scrollIntoView({ behavior:'smooth', block:'nearest' }); }
+    });
+    marker.on('contextmenu', (e) => {
+      L.DomEvent.stopPropagation(e);
+      addToRoute(co, [lat, lng]);
+    });
+
+    mapMarkers.push(marker);
+
+    const div = document.createElement('div');
+    div.className = 'map-co-item';
+    div.id = 'mapitem-' + co.idx;
+    div.innerHTML = `
+      <div class="map-co-name">${co.name}${co.isCustom ? ' <span class="custom-badge">CUSTOM</span>' : ''}</div>
+      <div class="map-co-loc">📍 ${co.location}</div>
+      <div class="map-co-badges">
+        <span class="sector-pill ${s.pill}">${s.icon} ${s.label}</span>
+        <span class="badge badge-${co.priority.toLowerCase()}">${co.priority}</span>
+      </div>`;
+    div.onclick = () => {
+      leafletMap.setView([lat, lng], 13);
+      marker.openPopup();
+      document.querySelectorAll('.map-co-item').forEach(el => el.classList.remove('highlighted'));
+      div.classList.add('highlighted');
+    };
+    mapList.appendChild(div);
+  });
+
+  if (mapMarkers.length > 0) {
+    const group = L.featureGroup(mapMarkers);
+    leafletMap.fitBounds(group.getBounds().pad(0.1));
+  }
+
+  // Re-draw route if active
+  if (routeStops.length >= 2) drawRouteLine();
+  const rp = document.getElementById('route-panel');
+  if (rp) rp.style.display = '';
+};
+
+loadCustomCompanies();
 loadFromStorage();
 render();
 </script>
+
+<!-- ADD COMPANY MODAL -->
+<div class="modal-overlay" id="add-modal-overlay" onclick="closeAddModal(event)">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <h3 id="modal-title">➕ Añadir nueva empresa</h3>
+      <button class="modal-close" onclick="closeAddModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Nombre empresa *</label>
+          <input class="form-input" id="f-name" placeholder="Ej: Solvay Bilbao" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Sector *</label>
+          <select class="form-select" id="f-sector">
+            <option value="auto">🔩 Automoción y Metal</option>
+            <option value="quim">⚗️ Química / Farmacéutica</option>
+            <option value="alim">🥫 Alimentación</option>
+            <option value="meta">⚙️ Metalurgia / Ind. Pesada</option>
+            <option value="dist">🤝 Distribuidores / Partners</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Provincia / Comunidad</label>
+          <input class="form-input" id="f-province" placeholder="Ej: Vizcaya, Asturias..." />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Localidad / Polígono *</label>
+          <input class="form-input" id="f-location" placeholder="Ej: Bilbao (Pol. Arasur)" />
+        </div>
+      </div>
+      <div class="form-row full">
+        <div class="form-group">
+          <label class="form-label">Dirección completa (para geocodificar)</label>
+          <div class="geocode-row">
+            <input class="form-input" id="f-address" placeholder="Ej: Calle Mayor 1, Bilbao" style="flex:1" oninput="clearGeocode()" />
+            <button class="geocode-btn" onclick="geocodeAddress()">📍 Ubicar</button>
+          </div>
+          <div class="geocode-status" id="geocode-status">Introduce la dirección y pulsa Ubicar para colocarla en el mapa</div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Latitud</label>
+          <input class="form-input" id="f-lat" placeholder="43.2630" type="number" step="0.0001" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Longitud</label>
+          <input class="form-input" id="f-lng" placeholder="-2.9349" type="number" step="0.0001" />
+        </div>
+      </div>
+      <div class="form-row full">
+        <div class="form-group">
+          <label class="form-label">Actividad principal *</label>
+          <input class="form-input" id="f-activity" placeholder="Ej: Fabricación de reductores industriales" />
+        </div>
+      </div>
+      <div class="form-row full">
+        <div class="form-group">
+          <label class="form-label">Potencial Bonfiglioli</label>
+          <input class="form-input" id="f-potential" placeholder="Ej: Reductores para líneas de producción, variadores" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Prioridad</label>
+          <select class="form-select" id="f-priority">
+            <option value="ALTA">🟢 Alta</option>
+            <option value="MEDIA" selected>🟡 Media</option>
+            <option value="BAJA">⚪ Baja</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Contacto sugerido</label>
+          <input class="form-input" id="f-contact" placeholder="Ej: Responsable de Mantenimiento" />
+        </div>
+      </div>
+      <div class="form-row full">
+        <div class="form-group">
+          <label class="form-label">Notas iniciales</label>
+          <textarea class="form-textarea" id="f-notes" rows="3" placeholder="Observaciones, fuente del contacto, cómo llegaste a esta empresa..."></textarea>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-primary" style="background:var(--gray-300);color:var(--gray-700);flex:0;padding:10px 20px" onclick="closeAddModal()">Cancelar</button>
+      <button class="btn-accent" onclick="saveNewCompany()">💾 Guardar empresa</button>
+    </div>
+  </div>
+</div>
+
+<!-- ROUTE OPTIMIZER PANEL (inside map) -->
+<div class="route-panel" id="route-panel" style="display:none">
+  <div class="route-header">
+    <h4>🗺 Optimizar ruta</h4>
+    <button class="route-toggle" id="route-toggle-btn" onclick="toggleRoutePanel()">−</button>
+  </div>
+  <div class="route-body" id="route-body">
+    <div class="route-hint">Haz <strong>clic derecho</strong> en un marcador del mapa para añadirlo a la ruta. Puedes añadir hasta 10 paradas.</div>
+    <ul class="route-list" id="route-list">
+      <li style="font-size:12px;color:var(--gray-500);padding:6px;text-align:center">Sin paradas aún</li>
+    </ul>
+    <div class="route-actions">
+      <button class="route-btn route-btn-primary" onclick="optimizeRoute()">⚡ Optimizar orden</button>
+      <button class="route-btn route-btn-maps" onclick="openInGoogleMaps()">🔗 Abrir en Google Maps</button>
+      <button class="route-btn route-btn-secondary" onclick="clearRoute()">🗑 Limpiar ruta</button>
+    </div>
+    <div class="route-result" id="route-result" style="display:none"></div>
+  </div>
+  <div class="map-add-hint">Clic derecho en marcador para añadir</div>
+</div>
+
 </body>
 </html>
