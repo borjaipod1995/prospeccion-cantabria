@@ -1200,7 +1200,7 @@ async function doAuth() {
   }
 }
 
-async async function doSignOut() {
+async function doSignOut() {
   if (!confirm('¿Cerrar sesión?')) return;
   await window._auth.signOut();
 }
